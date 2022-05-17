@@ -3,15 +3,15 @@ package com.talky.mobile.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavType
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.talky.mobile.ui.commons.NavBar
 import dagger.hilt.android.AndroidEntryPoint
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 
@@ -33,22 +33,28 @@ class EntryPointActivity : ComponentActivity() {
 @Composable
 private fun TalkyApp() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
-        composable(route = NavigationKeys.Route.FEED) {
-            FeedScreenDestination()
-        }
-        composable(route = NavigationKeys.Route.PROFILE) {
-            ProfileScreenDestination()
-        }
-        composable(route = NavigationKeys.Route.FRIENDS) {
-            FriendsScreenDestination()
+    Scaffold(
+        bottomBar = {NavBar(navController)}
+    ) {
+        NavHost(navController, startDestination = NavigationKeys.Route.PROFILE) {
+            composable(route = NavigationKeys.Route.FEED) {
+                FeedScreenDestination(navController)
+            }
+            composable(route = NavigationKeys.Route.PROFILE) {
+                ProfileScreenDestination()
+            }
+            composable(route = NavigationKeys.Route.FRIENDS) {
+                FriendsScreenDestination()
+            }
         }
     }
+
 }
 
 @Composable
-private fun FeedScreenDestination() {
+private fun FeedScreenDestination(navController: NavController) {
     Text(text = "Feed screen")
+
 }
 
 @Composable
