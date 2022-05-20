@@ -10,6 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.talky.mobile.ui.commons.NavBar
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -42,12 +47,12 @@ class EntryPointActivity : ComponentActivity() {
 @Composable
 private fun TalkyApp() {
     val navController = rememberNavController()
-
-    Scaffold(backgroundColor = TestPrimary, modifier = Modifier.background(TestPrimary)) {
-        NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
-
+    Scaffold(
+        bottomBar = {NavBar(navController)}
+    ) {
+        NavHost(navController, startDestination = NavigationKeys.Route.PROFILE) {
             composable(route = NavigationKeys.Route.FEED) {
-                FeedScreenDestination()
+                FeedScreenDestination(navController)
             }
             composable(route = NavigationKeys.Route.PROFILE) {
                 ProfileScreenDestination()
@@ -56,24 +61,23 @@ private fun TalkyApp() {
                 FriendsScreenDestination()
             }
             composable(
-                    route = NavigationKeys.Route.FULL_SCREEN_IMAGE_ROUTE,
-                    arguments = listOf(
-                            navArgument(IMAGE_URL) {
-                                type = NavType.StringType
-                            }
-                    )
+                route = NavigationKeys.Route.FULL_SCREEN_IMAGE_ROUTE,
+                arguments = listOf(
+                    navArgument(IMAGE_URL) {
+                        type = NavType.StringType
+                    }
+                )
             ) {
                 FullScreenImageDestination(navController)
             }
         }
     }
-
-
 }
 
 @Composable
-private fun FeedScreenDestination() {
+private fun FeedScreenDestination(navController: NavController) {
     Text(text = "Feed screen")
+
 }
 
 @Composable
