@@ -15,14 +15,19 @@ function codegen() {
     local url="$1"
     local apiName=$(basename "$url")
 
-    $DOCKER_EXECUTABLE run --rm -v "$PWD/todelete:/local/app" --name openapi-codegen $OPENAPIGEN_DOCKER_IMAGE \
+    $DOCKER_EXECUTABLE run --rm \
+      -v "$PWD/app/src/main/java/com/talky/mobile/api/apis:/local/app/src/main/java/com/talky/mobile/api/apis" \
+      -v "$PWD/app/src/main/java/com/talky/mobile/api/models:/local/app/src/main/java/com/talky/mobile/api/models" \
+      --name openapi-codegen $OPENAPIGEN_DOCKER_IMAGE \
       generate \
       -g kotlin \
       --library jvm-retrofit2 \
       -i "$url" \
       -o /local/app \
-      -p sourceFolder=/src/main/java
-      --package-name "com.talky.mobile.api.$apiName"
+      -p sourceFolder=/src/main/java,useCoroutines=true,serializationLibrary=gson \
+      --package-name "com.talky.mobile.api"
+
+
 }
 
 if (( $# == 0 )); then
