@@ -50,7 +50,7 @@ private fun TalkyApp() {
     Scaffold(
         bottomBar = {NavBar(navController)}
     ) {
-        NavHost(navController, startDestination = NavigationKeys.Route.PROFILE) {
+        NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
             composable(route = NavigationKeys.Route.FEED) {
                 FeedScreenDestination(navController)
             }
