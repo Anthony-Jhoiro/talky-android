@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Talky</string>
+    <string name="com_auth0_client_id">PwDwGuo0avztzl7Lv2AaTszeQKghcLaI</string>
+    <string name="com_auth0_domain">anthonyjhoiro.eu.auth0.com</string>
 </resources>

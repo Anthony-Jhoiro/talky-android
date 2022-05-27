@@ -1,12 +1,18 @@
 package com.talky.mobile.api.clients
 
+import android.content.Context
 import com.talky.mobile.api.apis.*
 import com.talky.mobile.api.infrastructure.Serializer
+import com.talky.mobile.providers.Authentication
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -20,9 +26,24 @@ class TalkyApiProvider {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptorOkHttpClient(): OkHttpClient {
+    fun provideAuthInterceptorOkHttpClient(@ApplicationContext context: Context, authentication: Authentication): OkHttpClient {
         return OkHttpClient
             .Builder()
+            .addInterceptor(object: Interceptor {
+                override fun intercept(chain: Interceptor.Chain): Response {
+                    if (authentication.isLoggedIn(context)) {
+
+                        val requestWithAuth: Request = chain.request().newBuilder()
+                            .addHeader("Authorization", "Bearer ${authentication.accessToken}")
+                            .build()
+                        return chain.proceed(requestWithAuth)
+
+                    }
+
+                    return chain.proceed(chain.request())
+                }
+
+            })
             .build()
     }
 
@@ -101,9 +122,9 @@ class TalkyApiProvider {
 
 
     companion object {
-        const val USERS_API_URL = "https://api.talky.jho.ovh/users"
-        const val POSTS_API_URL = "https://api.talky.jho.ovh/posts"
-        const val SOCIAL_API_URL = "https://api.talky.jho.ovh/social"
+        const val USERS_API_URL = "https://api.talky.jho.ovh/users/"
+        const val POSTS_API_URL = "https://api.talky.jho.ovh/posts/"
+        const val SOCIAL_API_URL = "https://api.talky.jho.ovh/social/"
     }
 
 

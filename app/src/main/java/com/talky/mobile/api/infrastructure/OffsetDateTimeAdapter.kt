@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonWriter
 import com.google.gson.stream.JsonToken.NULL
 import java.io.IOException
 import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class OffsetDateTimeAdapter(private val formatter: DateTimeFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME) : TypeAdapter<OffsetDateTime>() {
@@ -28,7 +29,7 @@ class OffsetDateTimeAdapter(private val formatter: DateTimeFormatter = DateTimeF
                 return null
             }
             else -> {
-                return OffsetDateTime.parse(out.nextString(), formatter)
+                return ZonedDateTime.parse(out.nextString(), formatter).toOffsetDateTime()
             }
         }
     }
