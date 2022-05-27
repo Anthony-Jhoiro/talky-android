@@ -9,7 +9,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 object Serializer {
-    private const val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSS"
+    private const val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
     private val formatter = DateTimeFormatter.ofPattern(datePattern).withZone(ZoneId.systemDefault())
 
     @JvmStatic
