@@ -19,6 +19,8 @@ import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageViewModel
 import com.talky.mobile.ui.features.loading.LoadingScreen
 import com.talky.mobile.ui.features.login.LoginScreen
+import com.talky.mobile.ui.features.profile.ProfileScreen
+import com.talky.mobile.ui.features.profile.ProfileScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 
@@ -50,7 +52,7 @@ private fun TalkyApp() {
             }
             composable(route = NavigationKeys.Route.PROFILE) {
                 LoginRequired(authenticationViewModel, it) {
-                    ProfileScreenDestination()
+                    ProfileScreenDestination(navController)
                 }
             }
             composable(route = NavigationKeys.Route.FRIENDS) {
@@ -81,8 +83,13 @@ private fun FeedScreenDestination(navController: NavController) {
 }
 
 @Composable
-private fun ProfileScreenDestination() {
-    Text(text = "Profile screen")
+private fun ProfileScreenDestination(navController: NavController) {
+    //ProfileScreen()
+    val viewModel : ProfileScreenViewModel = hiltViewModel()
+    ProfileScreen(
+        state = viewModel.state,
+        //profile = authenticationViewModel.profile.value!!
+    )
 }
 
 @Composable
