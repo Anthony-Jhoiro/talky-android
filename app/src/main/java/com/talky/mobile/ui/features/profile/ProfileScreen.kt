@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.talky.mobile.R
 import com.talky.mobile.api.models.UserDto
 
 import com.talky.mobile.ui.theme.VioletClair
@@ -44,7 +45,12 @@ fun ProfileScreen(
                     .size(100.dp)
 
                 ) {
-                    AsyncImage(model = state.profile?.profilePicture.toString(), contentDescription = "")
+                if(state.profile?.profilePicture == null) {
+                    AsyncImage(model = R.drawable.ic_profile_default_picture, contentDescription = "")
+                } else {
+                    AsyncImage(model = state.profile.profilePicture.toString(), contentDescription = "")
+                }
+
                 }
             Row {
                 if(state.myProfile) {
