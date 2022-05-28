@@ -1,33 +1,36 @@
 package com.talky.mobile.api
 
-import androidx.paging.*
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import com.google.firebase.firestore.auth.User
 import com.talky.mobile.api.apis.PostControllerApi
+import com.talky.mobile.api.apis.UserControllerApi
 import com.talky.mobile.api.models.PostDto
+import com.talky.mobile.api.models.UserDto
 import retrofit2.HttpException
 import java.io.IOException
-import javax.inject.Inject
 import javax.inject.Singleton
 
-class TalkyPostsSource(private val postApi: PostControllerApi) : PagingSource<Int, PostDto>() {
-    override fun getRefreshKey(state: PagingState<Int, PostDto>): Int? {
+class TalkyUserListRemoteSource(private val userApi: UserControllerApi) : PagingSource<Int, UserDto>() {
+    override fun getRefreshKey(state: PagingState<Int, UserDto>): Int? {
         return state.anchorPosition
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostDto> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserDto> {
         return try {
             val nextPage = params.key ?: 0
 
-            val response = postApi.listPosts(page = nextPage, size = params.loadSize)
+            val response = userApi.getUsers(page = nextPage, size = params.loadSize)
 
             if (!response.isSuccessful) {
                 return LoadResult.Error(Exception(response.message()))
             }
 
-            val postList = response.body()
+            val userList = response.body()
             LoadResult.Page(
-                data = postList!!,
+                data = userList!!,
                 prevKey = if (nextPage == 0) null else nextPage - 1,
-                nextKey = if (postList.isEmpty()) null else nextPage + 1
+                nextKey = if (userList.isEmpty()) null else nextPage + 1
             )
         } catch (ex: IOException) {
             return LoadResult.Error(ex)
@@ -35,10 +38,5 @@ class TalkyPostsSource(private val postApi: PostControllerApi) : PagingSource<In
             return LoadResult.Error(ex)
         }
     }
-
-}
-
-@Singleton
-class TalkyPostsRemoteResource @Inject constructor(private val postControllerApi: PostControllerApi) {
 
 }

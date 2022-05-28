@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun FeedScreen(postList: Flow<PagingData<PostDto>>, onOpenAsset: (String) -> Unit, onAddButtonPressed: () -> Unit, isLoggedIn: Boolean) {
-    val userListItems: LazyPagingItems<PostDto> = postList.collectAsLazyPagingItems()
+    val postListItems: LazyPagingItems<PostDto> = postList.collectAsLazyPagingItems()
 
     Scaffold(
         floatingActionButton = {
@@ -40,7 +40,7 @@ fun FeedScreen(postList: Flow<PagingData<PostDto>>, onOpenAsset: (String) -> Uni
             modifier = Modifier
                 .background(VioletClair)
         ) {
-            items(userListItems) { postDto ->
+            items(postListItems) { postDto ->
                 PostFrame(postDto!!, onOpenAsset)
             }
         }
