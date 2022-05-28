@@ -23,11 +23,13 @@ class Authentication @Inject constructor() {
     var accessToken: String? = null
     private var auth0: Auth0? = null
 
-    fun loadAuthentication(context: Context, successListener: (Credentials) -> Unit) {
+    fun loadAuthentication(context: Context, successListener: (Credentials) -> Unit, failureListener: (CredentialsManagerException) -> Unit) {
         if (accessToken == null) {
             return getStorageManager(context).getCredentials(
                 callback = object : Callback<Credentials, CredentialsManagerException> {
-                    override fun onFailure(error: CredentialsManagerException) {}
+                    override fun onFailure(error: CredentialsManagerException) {
+                        failureListener(error)
+                    }
 
                     override fun onSuccess(result: Credentials) {
                         accessToken = result.accessToken

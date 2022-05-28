@@ -116,4 +116,7 @@ dependencies {
 
     // Paging flow
     implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+
+    // Permissions
+    implementation "com.google.accompanist:accompanist-permissions:0.24.6-alpha"
 }
