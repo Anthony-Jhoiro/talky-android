@@ -1,7 +1,6 @@
 package com.talky.mobile.ui.commons
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,46 +14,53 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 
 import coil.request.ImageRequest
+import com.talky.mobile.R
+import com.talky.mobile.api.models.UserDto
 
 @Composable
-fun UserBar(author: User) {
+fun UserBar(userDto: UserDto, onClick : () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp)
             .shadow(
                 elevation = 8.dp,
                 shape = RoundedCornerShape(15)
-            ),
+            ).clickable{onClick()},
         shape = RoundedCornerShape(15)
     ) {
 
     Row(
         modifier = Modifier
-            .padding(15.dp),
+            .padding(12.dp),
 
         verticalAlignment = Alignment.CenterVertically,
         ) {
+
+
+
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(author.profilePicture)
-                .size(150)
+
+                .data(userDto.profilePicture)
                 .build(),
+            error = painterResource(id =  R.drawable.ic_profile_default_picture),
             contentScale = Crop,
             contentDescription = null,
             modifier = Modifier
                 .clip(CircleShape)
+                .size(60.dp)
+
         )
-        Spacer(modifier = Modifier.width(12.dp))
+        Spacer(modifier = Modifier.width(20.dp))
         Text(
-            text = author.displayedName,
-            fontSize = 20.sp,
+            text = userDto.displayedName!!,
+            fontSize = 24.sp,
         )
 
     }

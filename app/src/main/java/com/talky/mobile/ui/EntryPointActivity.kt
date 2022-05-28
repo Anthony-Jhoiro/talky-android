@@ -19,10 +19,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.talky.mobile.ui.NavigationKeys.Arg.IMAGE_URL
+import com.talky.mobile.ui.NavigationKeys.Arg.PROFILE_ID
 import com.talky.mobile.ui.NavigationKeys.Route.POST_CREATION
+import com.talky.mobile.ui.NavigationKeys.Route.PROFILE
 import com.talky.mobile.ui.commons.NavBar
 import com.talky.mobile.ui.features.feed.FeedScreen
 import com.talky.mobile.ui.features.feed.FeedViewModel
+import com.talky.mobile.ui.features.friends.FriendsScreen
+import com.talky.mobile.ui.features.friends.FriendsScreenViewModel
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageViewModel
 import com.talky.mobile.ui.features.loading.LoadingScreen
@@ -85,7 +89,7 @@ private fun TalkyApp() {
                 }
                 composable(route = NavigationKeys.Route.FRIENDS) {
                     LoginRequired(authenticationViewModel, it) {
-                        FriendsScreenDestination()
+                        FriendsScreenDestination(authenticationViewModel, navController)
                     }
                 }
                 composable(
@@ -97,6 +101,16 @@ private fun TalkyApp() {
                     )
                 ) {
                     FullScreenImageDestination(navController)
+                }
+                composable(
+                    route = NavigationKeys.Route.USER_PROFILE,
+                    arguments = listOf(
+                        navArgument(PROFILE_ID) {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    ProfileScreenDestination(navController = navController, authenticationViewModel = authenticationViewModel)
                 }
             }
         }
@@ -145,7 +159,8 @@ private fun PostCreationScreenDestination(navController: NavController) {
 @Composable
 private fun ProfileScreenDestination(
     navController: NavController,
-    authenticationViewModel: AuthenticationViewModel
+    authenticationViewModel: AuthenticationViewModel,
+
 ) {
     //ProfileScreen()
     val viewModel: ProfileScreenViewModel = hiltViewModel()
@@ -159,8 +174,14 @@ private fun ProfileScreenDestination(
 }
 
 @Composable
-private fun FriendsScreenDestination() {
-    Text(text = "Friends screen")
+private fun FriendsScreenDestination(authenticationViewModel : AuthenticationViewModel, navController: NavController) {
+    val viewModel : FriendsScreenViewModel = hiltViewModel()
+    FriendsScreen(
+        userList = viewModel.users,
+        onUserClick = {
+            navController.navigate(PROFILE + "/" + it.id)
+        }
+    )
 }
 
 // Login pages
@@ -213,15 +234,19 @@ object NavigationKeys {
 
     object Arg {
         const val IMAGE_URL = "imageUrl"
+        const val PROFILE_ID = "id"
     }
+
 
     object Route {
         const val PROFILE = "profile"
+        const val USER_PROFILE = "profile/{$PROFILE_ID}"
         const val FEED = "feed"
         const val FRIENDS = "friends"
         const val FULL_SCREEN_IMAGE_ROUTE = "FullScreenImage?image={$IMAGE_URL}"
         const val FULL_SCREEN_IMAGE = "FullScreenImage?image="
         const val POST_CREATION = "createPost"
+
     }
 }
 

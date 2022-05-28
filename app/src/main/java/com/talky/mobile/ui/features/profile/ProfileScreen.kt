@@ -11,9 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.talky.mobile.R
 import com.talky.mobile.api.models.UserDto
 
@@ -45,11 +48,14 @@ fun ProfileScreen(
                     .size(100.dp)
 
                 ) {
-                if(state.profile?.profilePicture == null) {
-                    AsyncImage(model = R.drawable.ic_profile_default_picture, contentDescription = "")
-                } else {
-                    AsyncImage(model = state.profile.profilePicture.toString(), contentDescription = "")
-                }
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+
+                            .data(state.profile?.profilePicture)
+                            .build(),
+                        contentDescription = "",
+                        error = painterResource(id =  R.drawable.ic_profile_default_picture)
+                    )
 
                 }
             Row {
