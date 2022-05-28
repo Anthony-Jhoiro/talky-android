@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import coil.request.ImageRequest
 import com.talky.mobile.R
 import com.talky.mobile.api.models.UserDto
+import java.time.OffsetDateTime
 
 @Composable
 fun UserBar(userDto: UserDto, onClick : () -> Unit) {
@@ -57,6 +58,17 @@ fun UserBar(userDto: UserDto, onClick : () -> Unit) {
                 .size(60.dp)
 
         )
+        if(userDto.lastSeen!!.plusHours(2).isAfter(OffsetDateTime.now().minusMinutes(15))) {
+            AsyncImage(
+                model = R.drawable.present_indicator,
+                contentScale = Crop,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(20.dp)
+                    .offset(x = (-15).dp, y = (-15).dp)
+            )
+
+        }
         Spacer(modifier = Modifier.width(20.dp))
         Text(
             text = userDto.displayedName!!,
