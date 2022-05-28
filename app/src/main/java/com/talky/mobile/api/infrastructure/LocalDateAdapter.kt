@@ -28,7 +28,7 @@ class LocalDateAdapter(private val formatter: DateTimeFormatter = DateTimeFormat
                 return null
             }
             else -> {
-                return LocalDate.parse(out.nextString(), formatter)
+                return LocalDate.parse(out.nextString().split(".")[0], formatter)
             }
         }
     }

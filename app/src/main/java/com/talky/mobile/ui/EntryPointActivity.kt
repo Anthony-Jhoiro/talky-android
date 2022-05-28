@@ -96,9 +96,9 @@ private fun FriendsScreenDestination() {
 private fun LoginRequired(authenticationViewModel: AuthenticationViewModel, navBackStackEntry: NavBackStackEntry, content: @Composable (NavBackStackEntry) -> Unit) {
     val context = LocalContext.current
     when {
-        authenticationViewModel.isFetching.value -> {
-            LoadingScreenDestination()
-        }
+        //authenticationViewModel.isFetching.value -> {
+        //    LoadingScreenDestination()
+        //}
         authenticationViewModel.isLoggedIn.value -> {
             content(navBackStackEntry)
         }
