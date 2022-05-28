@@ -52,7 +52,7 @@ private fun TalkyApp() {
             }
             composable(route = NavigationKeys.Route.PROFILE) {
                 LoginRequired(authenticationViewModel, it) {
-                    ProfileScreenDestination(navController)
+                    ProfileScreenDestination(navController, authenticationViewModel)
                 }
             }
             composable(route = NavigationKeys.Route.FRIENDS) {
@@ -83,12 +83,15 @@ private fun FeedScreenDestination(navController: NavController) {
 }
 
 @Composable
-private fun ProfileScreenDestination(navController: NavController) {
+private fun ProfileScreenDestination(navController: NavController, authenticationViewModel : AuthenticationViewModel) {
     //ProfileScreen()
     val viewModel : ProfileScreenViewModel = hiltViewModel()
+    if(viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
+        viewModel.state.myProfile = true;
+    }
     ProfileScreen(
         state = viewModel.state,
-        //profile = authenticationViewModel.profile.value!!
+        viewModel = viewModel
     )
 }
 

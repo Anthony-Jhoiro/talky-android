@@ -24,13 +24,10 @@ class TalkyUsersRemoteSource @Inject constructor(private val userApi: UserContro
     }
 
     suspend fun updateDisplayedName(request: UpdateUserRequestDto): UserDto? = withContext(Dispatchers.IO) {
-        if (currentUserProfile != null) {
-            return@withContext currentUserProfile
-        }
 
         val response = userApi.updateProfile(request)
 
-        this@TalkyUsersRemoteSource.currentUserProfile = userApi.getCurrentUser().body()
+        this@TalkyUsersRemoteSource.currentUserProfile = response.body()
         return@withContext currentUserProfile
     }
 
@@ -40,8 +37,6 @@ class TalkyUsersRemoteSource @Inject constructor(private val userApi: UserContro
         }
 
         val response = userApi.createUser(request)
-
-        println(response)
 
         this@TalkyUsersRemoteSource.currentUserProfile = response.body()
         return@withContext currentUserProfile

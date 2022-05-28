@@ -13,13 +13,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val remoteSource: TalkyUsersRemoteSource
+    private val remoteSource: TalkyUsersRemoteSource,
 ) :
     ViewModel() {
 
     var state by mutableStateOf(
         ProfileScreenContract.State(
-            profile = null
+            profile = null,
+            myProfile = false
         )
     )
 
@@ -34,9 +35,9 @@ class ProfileScreenViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateProfile() {
+    fun updateProfile(name: String) {
         val request = UpdateUserRequestDto(
-            displayedName = "aaa",
+            displayedName = name,
             profilePicture = null
         )
         viewModelScope.launch {
@@ -44,5 +45,4 @@ class ProfileScreenViewModel @Inject constructor(
             getProfile()
         }
     }
-
 }

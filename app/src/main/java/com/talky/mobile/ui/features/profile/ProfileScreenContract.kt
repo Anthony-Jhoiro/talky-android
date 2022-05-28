@@ -6,5 +6,6 @@ class ProfileScreenContract {
 
     data class State(
         val profile: UserDto?,
+        var myProfile: Boolean
     )
 }

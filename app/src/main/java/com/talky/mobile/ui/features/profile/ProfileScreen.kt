@@ -3,36 +3,27 @@ package com.talky.mobile.ui.features.profile
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter.State.Empty.painter
-import com.google.firebase.annotations.PreviewApi
-import com.talky.mobile.R
 import com.talky.mobile.api.models.UserDto
+
 import com.talky.mobile.ui.theme.VioletClair
-import com.talky.mobile.ui.theme.VioletFonce
 
 @Composable
 fun ProfileScreen(
     state: ProfileScreenContract.State,
-
+    viewModel: ProfileScreenViewModel
 ) {
-    val image: Painter = painterResource(id = R.drawable.ic_profile_default_picture)
+    var name by remember { mutableStateOf("") }
 
     Scaffold(
         backgroundColor = VioletClair
@@ -56,28 +47,32 @@ fun ProfileScreen(
                     AsyncImage(model = state.profile?.profilePicture.toString(), contentDescription = "")
                 }
             Row {
-                Text(text= state.profile?.displayedName.toString(),
-                    modifier = Modifier.width(100.dp).align(CenterVertically))
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Modifier")
+                if(state.myProfile) {
+                    OutlinedTextField(
+                        modifier = Modifier.padding(6.dp),
+                        value = name,
+                        onValueChange = { name = it },
+                        label = { Text("Entrez votre nouveau nom") }
+                    )
+
+                    Button(onClick = { viewModel.updateProfile(name) }, modifier = Modifier
+                        .fillMaxSize()
+                        .padding(6.dp)) {
+                        Icon(Icons.Filled.Edit,
+                            contentDescription = "Editer",
+                        )
+                    }
                 }
-            }
-            
 
             }
-
-        }/*
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(20.dp)
-                .background(Color.White)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
             Row {
-                Text(text= "Liste des posts : ", modifier = Modifier.width(100.dp))
+                Text(text= state.profile?.displayedName.toString(),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .align(CenterVertically))
             }
-        }*/
+        }
     }
+}
+
 
