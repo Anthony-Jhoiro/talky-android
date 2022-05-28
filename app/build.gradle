@@ -113,4 +113,10 @@ dependencies {
 
     // Auth0
     implementation 'com.auth0.android:auth0:2.7.0'
+
+    // Paging flow
+    implementation "androidx.paging:paging-compose:1.0.0-alpha14"
+
+    // Permissions
+    implementation "com.google.accompanist:accompanist-permissions:0.24.6-alpha"
 }

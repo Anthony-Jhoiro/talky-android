@@ -41,13 +41,13 @@ fun FullScreenImageScreen(
                             Icon(
                                     imageVector = Icons.Default.ArrowBack,
                                     modifier = Modifier
-                                            .padding(horizontal = 12.dp)
-                                            .clickable { onPressBack() },
+                                        .padding(horizontal = 12.dp)
+                                        .clickable { onPressBack() },
                                     contentDescription = "Go back"
                             )
                         },
 
-                        title = { Text("Close") },
+                        title = { Text("Retour") },
                         backgroundColor = MaterialTheme.colors.background
                 )
             }
@@ -55,28 +55,28 @@ fun FullScreenImageScreen(
         Column() {
             Column(
 
-                    Modifier
-                            .fillMaxSize()
-                            .pointerInput(Unit) {
-                                detectTransformGestures { _, pan, zoom, _ ->
-                                    scale.value *= zoom
-                                    val x = pan.x * zoom
-                                    val y = pan.y * zoom
-                                    offsetX.value += x
-                                    offsetY.value += y
-                                }
-                            }
-                            .onSizeChanged {
-                                size.value = it
-                            }
-                            .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
-                            .graphicsLayer {
-                                scaleX = maxOf(1f, minOf(10f, scale.value))
-                                scaleY = maxOf(1f, minOf(10f, scale.value))
-                            }
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            scale.value *= zoom
+                            val x = pan.x * zoom
+                            val y = pan.y * zoom
+                            offsetX.value += x
+                            offsetY.value += y
+                        }
+                    }
+                    .onSizeChanged {
+                        size.value = it
+                    }
+                    .offset { IntOffset(offsetX.value.roundToInt(), offsetY.value.roundToInt()) }
+                    .graphicsLayer {
+                        scaleX = maxOf(1f, minOf(10f, scale.value))
+                        scaleY = maxOf(1f, minOf(10f, scale.value))
+                    }
             ) {
                 if (state.url != null) {
-                    AssetComposable(Asset("IMAGE", state.url), {}, false)
+                    AssetComposable(state.url, {}, false)
                 }
             }
         }

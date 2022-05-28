@@ -31,11 +31,19 @@ class AuthenticationViewModel @Inject constructor(
     var isFetching = mutableStateOf(true)
 
     init {
-        authentication.loadAuthentication(context) {
-            reloadState {
-                isFetching.value = false
+        authentication.loadAuthentication(
+            context,
+            successListener = {
+                reloadState {
+                    isFetching.value = false
+                }
+            },
+            failureListener = {
+                reloadState {
+                    isFetching.value = false
+                }
             }
-        }
+        )
     }
 
     private fun reloadState( callback: () -> Unit = {}) {

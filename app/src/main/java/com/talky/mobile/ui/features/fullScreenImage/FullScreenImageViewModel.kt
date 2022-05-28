@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.talky.mobile.ui.NavigationKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +29,7 @@ class FullScreenImageViewModel @Inject constructor(
         viewModelScope.launch {
             val imageUrl = stateHandle.get<String>(NavigationKeys.Arg.IMAGE_URL)
                     ?: throw IllegalStateException("No categoryId was passed to destination.")
-            state = state.copy(url = imageUrl)
+            state = state.copy(url = String(Base64.getDecoder().decode(imageUrl)))
         }
     }
 }
