@@ -23,7 +23,7 @@ interface MessageControllerApi {
      * @return [PageMessageDto]
      */
     @GET("api/v1/messages/friendship/{friendshipId}")
-    suspend fun listMessages(@Path("friendshipId") friendshipId: java.util.UUID, @Query("fetch") fetch: kotlin.String? = "AFTER", @Query("date") date: java.time.OffsetDateTime? = null, @Query("limit") limit: kotlin.Int? = 20): Response<PageMessageDto>
+    suspend fun listMessages(@Path("friendshipId") friendshipId: java.util.UUID, @Query("fetch") fetch: kotlin.String? = AFTER, @Query("date") date: java.time.OffsetDateTime? = null, @Query("limit") limit: kotlin.Int? = 20): Response<PageMessageDto>
 
     /**
      * 

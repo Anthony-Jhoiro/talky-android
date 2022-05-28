@@ -7,7 +7,6 @@ import okhttp3.RequestBody
 
 import com.talky.mobile.api.models.AssetTemporaryLinkResponseDto
 import com.talky.mobile.api.models.CreateUserRequestDto
-import com.talky.mobile.api.models.PageUserDto
 import com.talky.mobile.api.models.UpdateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 
@@ -65,10 +64,13 @@ interface UserControllerApi {
      * Responses:
      *  - 200: OK
      *
-     * @return [PageUserDto]
+     * @param page Zero-based page index (0..N) (optional, default to 0)
+     * @param size The size of the page to be returned (optional, default to 20)
+     * @param sort Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. (optional)
+     * @return [kotlin.collections.List<UserDto>]
      */
     @GET("api/v1/users")
-    suspend fun getUsers(): Response<PageUserDto>
+    suspend fun getUsers(@Query("page") page: kotlin.Int? = 0, @Query("size") size: kotlin.Int? = 20, @Query("sort") sort: kotlin.collections.List<kotlin.String>? = null): Response<kotlin.collections.List<UserDto>>
 
     /**
      * 
