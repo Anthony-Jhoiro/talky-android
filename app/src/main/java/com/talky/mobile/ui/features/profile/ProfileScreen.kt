@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,13 +26,34 @@ import com.talky.mobile.ui.theme.VioletClair
 @Composable
 fun ProfileScreen(
     state: ProfileScreenContract.State,
-    viewModel: ProfileScreenViewModel
+    viewModel: ProfileScreenViewModel,
+    onPressBack: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
 
     Scaffold(
-        backgroundColor = VioletClair
+        backgroundColor = VioletClair,
+        topBar = {
+            if (!state.myProfile) {
+                TopAppBar(
+                    navigationIcon = {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            modifier = Modifier
+                                .padding(horizontal = 12.dp)
+                                .clickable { onPressBack() },
+                            contentDescription = "Go back"
+                        )
+                    },
+
+                    title = { Text("Retour") },
+                    backgroundColor = MaterialTheme.colors.background
+                )
+            }
+        }
     ) {
+
+
         Column(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
@@ -47,19 +69,19 @@ fun ProfileScreen(
                     .padding(8.dp)
                     .size(100.dp)
 
-                ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
 
-                            .data(state.profile?.profilePicture)
-                            .build(),
-                        contentDescription = "",
-                        error = painterResource(id =  R.drawable.ic_profile_default_picture)
-                    )
+                        .data(state.profile?.profilePicture)
+                        .build(),
+                    contentDescription = "",
+                    error = painterResource(id = R.drawable.ic_profile_default_picture)
+                )
 
-                }
+            }
             Row {
-                if(state.myProfile) {
+                if (state.myProfile) {
                     OutlinedTextField(
                         modifier = Modifier.padding(6.dp),
                         value = name,
@@ -67,10 +89,13 @@ fun ProfileScreen(
                         label = { Text("Entrez votre nouveau nom") }
                     )
 
-                    Button(onClick = { viewModel.updateProfile(name) }, modifier = Modifier
-                        .fillMaxSize()
-                        .padding(6.dp)) {
-                        Icon(Icons.Filled.Edit,
+                    Button(
+                        onClick = { viewModel.updateProfile(name) }, modifier = Modifier
+                            .fillMaxSize()
+                            .padding(6.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Edit,
                             contentDescription = "Editer",
                         )
                     }
@@ -78,10 +103,12 @@ fun ProfileScreen(
 
             }
             Row {
-                Text(text= state.profile?.displayedName.toString(),
+                Text(
+                    text = state.profile?.displayedName.toString(),
                     modifier = Modifier
                         .width(100.dp)
-                        .align(CenterVertically))
+                        .align(CenterVertically)
+                )
             }
         }
     }
