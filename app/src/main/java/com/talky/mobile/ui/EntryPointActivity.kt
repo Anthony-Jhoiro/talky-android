@@ -27,13 +27,10 @@ import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageViewModel
 import com.talky.mobile.ui.features.loading.LoadingScreen
 import com.talky.mobile.ui.features.login.LoginScreen
-
 import com.talky.mobile.ui.features.postCreation.PostCreationScreen
 import com.talky.mobile.ui.features.postCreation.PostCreationViewModel
-
 import com.talky.mobile.ui.features.profile.ProfileScreen
 import com.talky.mobile.ui.features.profile.ProfileScreenViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 import com.talky.mobile.ui.theme.VioletClair
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,14 +63,15 @@ private fun TalkyApp() {
             .background(VioletClair)
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-        NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
-            composable(route = NavigationKeys.Route.FEED) {
-                FeedScreenDestination(navController, authenticationViewModel)
-            }
-            composable(route = NavigationKeys.Route.PROFILE) {
-                LoginRequired(authenticationViewModel, it) {
-                    ProfileScreenDestination(navController, authenticationViewModel)
+            NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
+                composable(route = NavigationKeys.Route.FEED) {
+                    FeedScreenDestination(navController, authenticationViewModel)
+                }
+                composable(route = NavigationKeys.Route.PROFILE) {
+                    LoginRequired(authenticationViewModel, it) {
+                        ProfileScreenDestination(navController, authenticationViewModel)
 
+                    }
                 }
 
                 composable(route = POST_CREATION) {
@@ -82,7 +80,7 @@ private fun TalkyApp() {
 
                 composable(route = NavigationKeys.Route.PROFILE) {
                     LoginRequired(authenticationViewModel, it) {
-                        ProfileScreenDestination()
+                        ProfileScreenDestination(navController, authenticationViewModel)
                     }
                 }
                 composable(route = NavigationKeys.Route.FRIENDS) {
@@ -138,18 +136,20 @@ private fun PostCreationScreenDestination(navController: NavController) {
         onPressBack = {
             navController.popBackStack()
         },
-        onSubmit = {
-            textContent, privacy, images ->
+        onSubmit = { textContent, privacy, images ->
             viewModel.onSubmit(textContent, privacy, images)
         }
     )
 }
 
 @Composable
-private fun ProfileScreenDestination(navController: NavController, authenticationViewModel : AuthenticationViewModel) {
+private fun ProfileScreenDestination(
+    navController: NavController,
+    authenticationViewModel: AuthenticationViewModel
+) {
     //ProfileScreen()
-    val viewModel : ProfileScreenViewModel = hiltViewModel()
-    if(viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
+    val viewModel: ProfileScreenViewModel = hiltViewModel()
+    if (viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
         viewModel.state.myProfile = true;
     }
     ProfileScreen(
@@ -173,9 +173,9 @@ private fun LoginRequired(
 ) {
     val context = LocalContext.current
     when {
-        //authenticationViewModel.isFetching.value -> {
-        //    LoadingScreenDestination()
-        //}
+        authenticationViewModel.isFetching.value -> {
+            LoadingScreenDestination()
+        }
         authenticationViewModel.isLoggedIn.value -> {
             content(navBackStackEntry)
         }
