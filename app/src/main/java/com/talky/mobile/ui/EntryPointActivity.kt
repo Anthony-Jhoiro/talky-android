@@ -19,6 +19,8 @@ import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageViewModel
 import com.talky.mobile.ui.features.loading.LoadingScreen
 import com.talky.mobile.ui.features.login.LoginScreen
+import com.talky.mobile.ui.features.profile.ProfileScreen
+import com.talky.mobile.ui.features.profile.ProfileScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 
@@ -50,7 +52,7 @@ private fun TalkyApp() {
             }
             composable(route = NavigationKeys.Route.PROFILE) {
                 LoginRequired(authenticationViewModel, it) {
-                    ProfileScreenDestination()
+                    ProfileScreenDestination(navController, authenticationViewModel)
                 }
             }
             composable(route = NavigationKeys.Route.FRIENDS) {
@@ -81,8 +83,16 @@ private fun FeedScreenDestination(navController: NavController) {
 }
 
 @Composable
-private fun ProfileScreenDestination() {
-    Text(text = "Profile screen")
+private fun ProfileScreenDestination(navController: NavController, authenticationViewModel : AuthenticationViewModel) {
+    //ProfileScreen()
+    val viewModel : ProfileScreenViewModel = hiltViewModel()
+    if(viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
+        viewModel.state.myProfile = true;
+    }
+    ProfileScreen(
+        state = viewModel.state,
+        viewModel = viewModel
+    )
 }
 
 @Composable
@@ -96,9 +106,9 @@ private fun FriendsScreenDestination() {
 private fun LoginRequired(authenticationViewModel: AuthenticationViewModel, navBackStackEntry: NavBackStackEntry, content: @Composable (NavBackStackEntry) -> Unit) {
     val context = LocalContext.current
     when {
-        authenticationViewModel.isFetching.value -> {
-            LoadingScreenDestination()
-        }
+        //authenticationViewModel.isFetching.value -> {
+        //    LoadingScreenDestination()
+        //}
         authenticationViewModel.isLoggedIn.value -> {
             content(navBackStackEntry)
         }

@@ -29,7 +29,7 @@ class OffsetDateTimeAdapter(private val formatter: DateTimeFormatter = DateTimeF
                 return null
             }
             else -> {
-                return ZonedDateTime.parse(out.nextString(), formatter).toOffsetDateTime()
+                return ZonedDateTime.parse(out.nextString().split(".")[0], formatter).toOffsetDateTime()
             }
         }
     }
