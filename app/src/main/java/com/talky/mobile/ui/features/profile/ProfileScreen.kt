@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -128,6 +129,22 @@ fun ProfileScreen(
                         .width(100.dp)
                         .align(CenterVertically)
                 )
+            }
+            Row {
+                if(!state.myProfile) {
+                    Button(
+                        onClick = { viewModel.addFriend() }, modifier = Modifier
+                            .fillMaxSize()
+                            .padding(6.dp)
+                    ) {
+                        Icon(
+                            Icons.Filled.Person,
+                            contentDescription = "AddFriend",
+                        )
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text("Ajouter un ami")
+                    }
+                }
             }
         }
     }

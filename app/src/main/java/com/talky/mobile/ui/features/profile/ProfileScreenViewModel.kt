@@ -6,8 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.auth.User
+import com.talky.mobile.api.TalkyFriendsRemoteSource
 import com.talky.mobile.api.TalkyUsersRemoteSource
+import com.talky.mobile.api.models.CreateFriendRequestRequestDto
 import com.talky.mobile.api.models.UpdateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.NavigationKeys
@@ -18,8 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val remoteSource: TalkyUsersRemoteSource,
-    private val stateHandle : SavedStateHandle
+    private val usersRemoteSource: TalkyUsersRemoteSource,
+    private val stateHandle : SavedStateHandle,
+    private val friendsRemoteSource: TalkyFriendsRemoteSource
 ) :
     ViewModel() {
 
@@ -38,9 +40,9 @@ class ProfileScreenViewModel @Inject constructor(
         val profileId = stateHandle.get<String>(NavigationKeys.Arg.PROFILE_ID)
         val profile: UserDto
         if(profileId!= null) {
-            profile = remoteSource.getUserById(UUID.fromString(profileId))!!
+            profile = usersRemoteSource.getUserById(UUID.fromString(profileId))!!
         } else {
-            profile = remoteSource.getProfile()!!
+            profile = usersRemoteSource.getProfile()!!
         }
         viewModelScope.launch {
             state = state.copy(profile = profile)
@@ -53,7 +55,17 @@ class ProfileScreenViewModel @Inject constructor(
             profilePicture = null
         )
         viewModelScope.launch {
-            remoteSource.updateDisplayedName(request)
+            usersRemoteSource.updateDisplayedName(request)
+            getProfile()
+        }
+    }
+
+    fun addFriend() {
+        val request = CreateFriendRequestRequestDto(
+            recipient = state.profile?.id
+        )
+        viewModelScope.launch {
+            friendsRemoteSource.createFriendRequest(request)
             getProfile()
         }
     }
