@@ -2,6 +2,9 @@ package com.talky.mobile.ui
 
 import android.app.Application
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -65,10 +68,36 @@ class AuthenticationViewModel @Inject constructor(
             if (isLoggedIn.value) {
                 while (index == pingRoutineIndex.value) {
                     pingApi()
-                    delay(5 * 60 * 1000L)
+                    delay(getPingDelay())
                 }
             }
         }
+    }
+
+    private fun getPingDelay(): Long {
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
+            context.registerReceiver(null, ifilter)
+        }
+
+        val batteryPct: Float? = batteryStatus?.let { intent ->
+            val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            level * 100 / scale.toFloat()
+        }
+
+        if (batteryPct != null) {
+            if (batteryPct > 50) {
+                // Battery High
+                return 3 * 60 * 1000L
+            } else if (batteryPct > 20) {
+                // Battery Medium-low
+                return 5 * 60 * 1000L
+            } else {
+                // Battery Low
+                return 10 * 60 * 1000L
+            }
+        }
+        return 5 * 60 * 1000L
     }
 
     private fun resetPingRoutine() {

@@ -30,27 +30,17 @@ class Ping @Inject constructor(
             // Get new FCM registration token
             val token = task.result
 
-            println("Here I am : $token")
-
-
             val scope = CoroutineScope(Dispatchers.IO)
             scope.launch {
                 sendPingWithDevice(token)
             }
 
-            println("Thousand suns")
-
         })
     }
 
     private suspend fun sendPingWithDevice(token: String) {
-        println("Hello World !")
         val request = UserPingDto(token)
-        val response = userControllerApi.ping(request)
-        println(response.message())
-        println(response.isSuccessful)
-        println(response.code())
-
+        userControllerApi.ping(request)
     }
 
 }
