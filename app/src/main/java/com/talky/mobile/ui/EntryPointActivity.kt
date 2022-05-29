@@ -16,6 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.NavigationKeys.Arg.IMAGE_URL
 import com.talky.mobile.ui.NavigationKeys.Arg.PROFILE_ID
 import com.talky.mobile.ui.commons.NavBar
@@ -33,8 +34,11 @@ import com.talky.mobile.ui.features.postCreation.PostCreationScreen
 import com.talky.mobile.ui.features.postCreation.PostCreationViewModel
 import com.talky.mobile.ui.features.profile.ProfileScreen
 import com.talky.mobile.ui.features.profile.ProfileScreenViewModel
+import com.talky.mobile.ui.features.userSearch.UserSearchScreen
+import com.talky.mobile.ui.features.userSearch.UserSearchScreenViewModel
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.map
 import java.util.*
 
 
@@ -80,6 +84,11 @@ private fun TalkyApp() {
                 composable(route = NavigationKeys.Route.PROFILE) {
                     LoginRequired(authenticationViewModel, it) {
                         ProfileScreenDestination(navController, authenticationViewModel)
+                    }
+                }
+                composable(route = NavigationKeys.Route.USER_SEARCH) {
+                    LoginRequired(authenticationViewModel, it) {
+                        UserSearchScreenDestination(navController)
                     }
                 }
                 composable(route = NavigationKeys.Route.FRIENDS) {
@@ -184,18 +193,36 @@ private fun ProfileScreenDestination(
 }
 
 @Composable
+private fun UserSearchScreenDestination(navController: NavController) {
+    val viewModel: UserSearchScreenViewModel = hiltViewModel()
+
+    UserSearchScreen(
+        userList = viewModel.users,
+        onUserClick = {
+            navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
+        },
+        onPressBack = {
+            navController.popBackStack()
+        }
+    )
+}
+
+@Composable
 private fun FriendsScreenDestination(navController: NavController) {
     val viewModel: FriendsScreenViewModel = hiltViewModel()
     val friendRequestListViewModel: FriendRequestListViewModel = hiltViewModel()
 
     FriendsScreen(
-        userList = viewModel.users,
-        onUserClick = {
+        userList = viewModel.friends,
+        onFriendClick = {
             navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
         },
         friendRequestList = friendRequestListViewModel.friendRequestList,
         onSeeFriendRequests = {
             navController.navigate(NavigationKeys.Route.FRIEND_REQUEST_LIST)
+        },
+        onSearch = {
+            navController.navigate(NavigationKeys.Route.USER_SEARCH)
         }
     )
 }
@@ -281,6 +308,7 @@ object NavigationKeys {
         const val FULL_SCREEN_IMAGE = "FullScreenImage?image="
         const val POST_CREATION = "createPost"
         const val FRIEND_REQUEST_LIST = "friendRequestScreen"
+        const val USER_SEARCH = "userSearch"
 
     }
 }
