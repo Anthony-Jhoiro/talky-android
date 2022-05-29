@@ -166,7 +166,7 @@ fun PostHeader(author: UserDto) {
             contentDescription = null,
             modifier = Modifier.clip(CircleShape),
         )
-
+        Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = author.displayedName!!,
             fontSize = 20.sp,
