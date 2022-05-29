@@ -7,7 +7,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 
-class TalkyFriendshipRemoteSource(private val friendshipControllerApi: FriendshipControllerApi) : PagingSource<Int, FriendDto>() {
+class TalkyFriendshipPagingSource(private val friendshipControllerApi: FriendshipControllerApi) : PagingSource<Int, FriendDto>() {
     override fun getRefreshKey(state: PagingState<Int, FriendDto>): Int? {
         return state.anchorPosition
     }

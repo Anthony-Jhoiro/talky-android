@@ -11,7 +11,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Singleton
 
-class TalkyUserListRemoteSource(private val userApi: UserControllerApi) : PagingSource<Int, UserDto>() {
+class TalkyUserPagingSource(private val userApi: UserControllerApi) : PagingSource<Int, UserDto>() {
     override fun getRefreshKey(state: PagingState<Int, UserDto>): Int? {
         return state.anchorPosition
     }

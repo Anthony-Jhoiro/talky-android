@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-class TalkyPostsSource(private val postApi: PostControllerApi) : PagingSource<Int, PostDto>() {
+class TalkyPostsPagingSource(private val postApi: PostControllerApi) : PagingSource<Int, PostDto>() {
     override fun getRefreshKey(state: PagingState<Int, PostDto>): Int? {
         return state.anchorPosition
     }

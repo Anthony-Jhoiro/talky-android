@@ -11,7 +11,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.talky.mobile.api.services.TalkyFriendsService
-import com.talky.mobile.api.pagingSource.TalkyUserPostsRemoteSource
+import com.talky.mobile.api.pagingSource.TalkyUserPostsPagingSource
 import com.talky.mobile.api.services.TalkyUsersService
 import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.models.CreateFriendRequestRequestDto
@@ -46,7 +46,7 @@ class ProfileScreenViewModel @Inject constructor(
         viewModelScope.launch {
             getProfile()
             userPosts = Pager(PagingConfig(pageSize = 5)) {
-                TalkyUserPostsRemoteSource(
+                TalkyUserPostsPagingSource(
                     postControllerApi,
                     state.profile?.id!!
                 )

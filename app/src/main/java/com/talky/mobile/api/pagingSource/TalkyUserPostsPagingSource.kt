@@ -10,7 +10,7 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class TalkyUserPostsRemoteSource constructor(private val postApi: PostControllerApi, private val uuid: UUID) : PagingSource<Int, PostDto>() {
+class TalkyUserPostsPagingSource constructor(private val postApi: PostControllerApi, private val uuid: UUID) : PagingSource<Int, PostDto>() {
 
     override fun getRefreshKey(state: PagingState<Int, PostDto>): Int? {
         return state.anchorPosition

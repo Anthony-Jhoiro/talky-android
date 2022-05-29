@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.talky.mobile.api.pagingSource.TalkyUserListRemoteSource
+import com.talky.mobile.api.pagingSource.TalkyUserPagingSource
 import com.talky.mobile.api.apis.UserControllerApi
 import com.talky.mobile.api.models.UserDto
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +17,6 @@ import javax.inject.Inject
 class UserSearchScreenViewModel @Inject constructor(private val userControllerApi: UserControllerApi) :
     ViewModel() {
     val users: Flow<PagingData<UserDto>> = Pager(PagingConfig(pageSize = 10)) {
-        TalkyUserListRemoteSource(userControllerApi)
+        TalkyUserPagingSource(userControllerApi)
     }.flow.cachedIn(viewModelScope)
 }
