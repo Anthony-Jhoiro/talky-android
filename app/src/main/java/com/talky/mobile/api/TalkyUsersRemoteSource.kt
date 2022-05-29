@@ -29,7 +29,7 @@ class TalkyUsersRemoteSource @Inject constructor(private val userApi: UserContro
 
     suspend fun getUserById(uuid: UUID): UserDto? = withContext(Dispatchers.IO) {
 
-        val response = userApi.getUserById(uuid);
+        val response = userApi.getUserById(uuid)
 
         return@withContext response.body()
     }
