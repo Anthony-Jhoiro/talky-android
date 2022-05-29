@@ -29,10 +29,10 @@ import com.google.gson.annotations.SerializedName
  *
  * @param offset 
  * @param sort 
- * @param paged 
- * @param unpaged 
  * @param pageNumber 
  * @param pageSize 
+ * @param paged 
+ * @param unpaged 
  */
 
 data class PageableObject (
@@ -43,17 +43,17 @@ data class PageableObject (
     @SerializedName("sort")
     val sort: Sort? = null,
 
-    @SerializedName("paged")
-    val paged: kotlin.Boolean? = null,
-
-    @SerializedName("unpaged")
-    val unpaged: kotlin.Boolean? = null,
-
     @SerializedName("pageNumber")
     val pageNumber: kotlin.Int? = null,
 
     @SerializedName("pageSize")
-    val pageSize: kotlin.Int? = null
+    val pageSize: kotlin.Int? = null,
+
+    @SerializedName("paged")
+    val paged: kotlin.Boolean? = null,
+
+    @SerializedName("unpaged")
+    val unpaged: kotlin.Boolean? = null
 
 )
 

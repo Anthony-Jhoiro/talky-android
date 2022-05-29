@@ -6,8 +6,21 @@ import retrofit2.Response
 import okhttp3.RequestBody
 
 import com.talky.mobile.api.models.FriendDto
+import com.talky.mobile.api.models.FriendshipDto
 
 interface FriendshipControllerApi {
+    /**
+     * 
+     * 
+     * Responses:
+     *  - 200: OK
+     *
+     * @param friendshipId 
+     * @return [FriendshipDto]
+     */
+    @GET("api/v1/friends/{friendshipId}")
+    suspend fun getFriendshipById(@Path("friendshipId") friendshipId: java.util.UUID): Response<FriendshipDto>
+
     /**
      * 
      * List all friends of the current user
