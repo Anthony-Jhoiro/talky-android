@@ -1,4 +1,4 @@
-package com.talky.mobile.providers
+package com.talky.mobile.facades
 
 import android.content.Context
 import com.auth0.android.Auth0
@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Authentication @Inject constructor() {
+class AuthenticationFacade @Inject constructor() {
 
     var accessToken: String? = null
     private var auth0: Auth0? = null

@@ -1,15 +1,12 @@
 package com.talky.mobile.ui.features.friendRequestsList
 
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.TalkyFriendRequestListRemoteSource
+import com.talky.mobile.api.services.TalkyFriendRequestListService
 import com.talky.mobile.api.models.FriendRequestDto
-import com.talky.mobile.ui.features.postCreation.rememberMutableStateListOf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -18,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendRequestListViewModel @Inject constructor(
-    private val talkyFriendRequestListRemoteSource: TalkyFriendRequestListRemoteSource
-): ViewModel() {
+    private val talkyFriendRequestListService: TalkyFriendRequestListService
+) : ViewModel() {
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
@@ -31,7 +28,7 @@ class FriendRequestListViewModel @Inject constructor(
         }
 
     private suspend fun loadFriendRequest() {
-        val friendRequestList = talkyFriendRequestListRemoteSource.getFriendRequests()
+        val friendRequestList = talkyFriendRequestListService.getFriendRequests()
         state = state.copy(friendRequestsList = friendRequestList)
     }
 
@@ -44,7 +41,8 @@ class FriendRequestListViewModel @Inject constructor(
 
     fun changeFriendRequestStatus(fr: FriendRequestDto, status: FriendRequestDto.Status) {
         viewModelScope.launch {
-            val didSucceed = talkyFriendRequestListRemoteSource.changeFriendRequestStatus(fr, status)
+            val didSucceed =
+                talkyFriendRequestListService.changeFriendRequestStatus(fr, status)
             if (didSucceed) {
                 if (status == FriendRequestDto.Status.dENIED) {
                     _toastMessage.emit("La demande d'ami a été supprimée")
@@ -55,7 +53,7 @@ class FriendRequestListViewModel @Inject constructor(
                 _toastMessage.emit("Une erreur est survenue")
             }
 
-            talkyFriendRequestListRemoteSource.reset()
+            talkyFriendRequestListService.reset()
             loadFriendRequest()
         }
     }

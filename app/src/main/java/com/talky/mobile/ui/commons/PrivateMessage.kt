@@ -19,8 +19,8 @@ import java.time.format.FormatStyle
 @Composable
 fun PrivateMessageSelf(
     messageDto: MessageDto
-){
-    Row() {
+) {
+    Row {
         Spacer(
             modifier = Modifier.weight(1F)
         )
@@ -32,13 +32,17 @@ fun PrivateMessageSelf(
                 .weight(4F),
             backgroundColor = VioletFonce,
         ) {
-            Column() {
+            Column {
                 Row(
                     modifier = Modifier.padding(top = 10.dp, end = 10.dp)
                 ) {
                     Text(
                         //text = messageDto.createdAt,
-                        text = messageDto.createdAt!!.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
+                        text = messageDto.createdAt!!.format(
+                            DateTimeFormatter.ofLocalizedDateTime(
+                                FormatStyle.SHORT
+                            )
+                        ),
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.LightGray,
                         fontSize = 15.sp,
@@ -52,7 +56,8 @@ fun PrivateMessageSelf(
                     Text(
                         color = Color.White,
                         //text = messageDto.content,
-                        text = messageDto.content!!)
+                        text = messageDto.content!!
+                    )
 
                 }
             }
@@ -63,7 +68,7 @@ fun PrivateMessageSelf(
 @Composable
 fun PrivateMessageFriend(
     messageDto: MessageDto
-){
+) {
     Row(
         horizontalArrangement = Arrangement.Start
     ) {
@@ -76,13 +81,17 @@ fun PrivateMessageFriend(
                 .weight(4F),
             backgroundColor = TestSecondary,
         ) {
-            Column() {
+            Column {
                 Row(
-                    modifier = Modifier.padding(top = 10.dp,start = 10.dp)
+                    modifier = Modifier.padding(top = 10.dp, start = 10.dp)
                 ) {
                     Text(
                         //text = messageDto.createdAt
-                        text = messageDto.createdAt!!.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
+                        text = messageDto.createdAt!!.format(
+                            DateTimeFormatter.ofLocalizedDateTime(
+                                FormatStyle.SHORT
+                            )
+                        ),
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.LightGray,
                         fontSize = 15.sp,
@@ -95,7 +104,8 @@ fun PrivateMessageFriend(
                     Text(
                         color = Color.Black,
                         //text = messageDto.content
-                        text = messageDto.content!!)
+                        text = messageDto.content!!
+                    )
 
                 }
 

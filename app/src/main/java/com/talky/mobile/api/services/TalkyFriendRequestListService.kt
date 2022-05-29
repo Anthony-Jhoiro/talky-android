@@ -1,11 +1,9 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.services
 
 import com.talky.mobile.api.apis.FriendRequestControllerApi
-import com.talky.mobile.api.apis.UserControllerApi
 import com.talky.mobile.api.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +11,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class TalkyFriendRequestListRemoteSource @Inject constructor(private val friendRequestControllerApi: FriendRequestControllerApi) {
+class TalkyFriendRequestListService @Inject constructor(private val friendRequestControllerApi: FriendRequestControllerApi) {
 
     private var friendRequestsList: List<FriendRequestDto>? = null
 
@@ -22,15 +20,15 @@ class TalkyFriendRequestListRemoteSource @Inject constructor(private val friendR
             return@withContext friendRequestsList!!
         }
         val friendList = friendRequestControllerApi.listFriendRequests().body()!!.toList()
-        this@TalkyFriendRequestListRemoteSource.friendRequestsList = friendList
+        this@TalkyFriendRequestListService.friendRequestsList = friendList
         return@withContext friendList
     }
 
-    suspend fun changeFriendRequestStatus(friendRequestDto: FriendRequestDto, status: FriendRequestDto.Status): Boolean {
+    suspend fun changeFriendRequestStatus(friendRequestDto: FriendRequestDto, status: FriendRequestDto.Status): Boolean = withContext(Dispatchers.IO) {
         val request = UpdateFriendRequestRequestDto(UpdateFriendRequestRequestDto.Status.valueOf(status.name))
         val response = friendRequestControllerApi.updateFriendRequest(friendRequestDto.id!!, request)
 
-        return response.isSuccessful
+        return@withContext response.isSuccessful
     }
 
     fun reset() {
