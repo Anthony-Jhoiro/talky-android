@@ -89,7 +89,7 @@ private fun TalkyApp() {
                 }
                 composable(route = NavigationKeys.Route.FRIEND_REQUEST_LIST) {
                     LoginRequired(authenticationViewModel, it) {
-                        FriendRequestListDestination()
+                        FriendRequestListDestination(navController)
                     }
                 }
                 composable(
@@ -197,9 +197,20 @@ private fun FriendsScreenDestination(navController: NavController) {
 }
 
 @Composable
-private fun FriendRequestListDestination() {
+private fun FriendRequestListDestination(navController: NavController) {
     val viewModel: FriendRequestListViewModel = hiltViewModel()
-    FriendRequestListScreen(friendRequestList = viewModel.friendRequestList)
+    FriendRequestListScreen(
+        friendRequestList = viewModel.friendRequestList,
+        onPressBack = {
+            navController.popBackStack()
+        },
+        onShowProfile = {
+            navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
+        },
+        onFriendRequestStatusChange = {
+            fr, status -> viewModel.changeFriendRequestStatus(fr, status)
+        }
+    )
 }
 
 // Login pages

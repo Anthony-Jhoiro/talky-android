@@ -32,5 +32,9 @@ class FriendRequestListViewModel @Inject constructor(
             state = state.copy(friendRequestsList = friendRequestList)
         }
     }
+
+    fun changeFriendRequestStatus(_friendRequestDto: FriendRequestDto, _status: FriendRequestDto.Status) {
+
+    }
 }
 
