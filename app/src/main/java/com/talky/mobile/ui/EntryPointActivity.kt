@@ -168,7 +168,8 @@ private fun ProfileScreenDestination(
         viewModel.state.myProfile = true;
     }
     val context = LocalContext.current
-    ProfileScreen(
+    viewModel.userPosts?.let {
+        ProfileScreen(
         state = viewModel.state,
         viewModel = viewModel,
         logout = {
@@ -176,8 +177,13 @@ private fun ProfileScreenDestination(
         },
         onPressBack = {
             navController.popBackStack()
+        },
+        userPosts = it,
+        onOpenAsset = {
+            openFullScreenImagePage(it, navController)
         }
     )
+    }
 }
 
 @Composable

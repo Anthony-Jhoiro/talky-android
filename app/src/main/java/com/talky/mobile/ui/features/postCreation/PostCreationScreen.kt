@@ -46,7 +46,6 @@ val privacyOptions = listOf(
     Option("Vous et vos amis", PostDto.Privacy.pRIVATE)
 )
 
-
 @ExperimentalPermissionsApi
 @Composable
 fun PostCreationScreen(
