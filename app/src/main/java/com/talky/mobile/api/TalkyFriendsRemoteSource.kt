@@ -14,9 +14,6 @@ class TalkyFriendsRemoteSource @Inject constructor(private val friendRequestApi:
     suspend fun createFriendRequest(request: CreateFriendRequestRequestDto): FriendRequestDto? = withContext(Dispatchers.IO) {
 
         val response = friendRequestApi.createFriendRequest(request)
-
-        println(response)
-
         return@withContext response.body();
     }
 }
