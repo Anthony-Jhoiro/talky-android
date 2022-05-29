@@ -89,7 +89,7 @@ private fun TalkyApp() {
                 }
                 composable(route = NavigationKeys.Route.FRIENDS) {
                     LoginRequired(authenticationViewModel, it) {
-                        FriendsScreenDestination(authenticationViewModel, navController)
+                        FriendsScreenDestination(navController)
                     }
                 }
                 composable(
@@ -169,12 +169,15 @@ private fun ProfileScreenDestination(
     }
     ProfileScreen(
         state = viewModel.state,
-        viewModel = viewModel
+        viewModel = viewModel,
+        onPressBack = {
+            navController.popBackStack()
+        }
     )
 }
 
 @Composable
-private fun FriendsScreenDestination(authenticationViewModel : AuthenticationViewModel, navController: NavController) {
+private fun FriendsScreenDestination(navController: NavController) {
     val viewModel : FriendsScreenViewModel = hiltViewModel()
     FriendsScreen(
         userList = viewModel.users,

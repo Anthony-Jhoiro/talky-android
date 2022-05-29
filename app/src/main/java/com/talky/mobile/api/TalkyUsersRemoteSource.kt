@@ -6,6 +6,7 @@ import com.talky.mobile.api.models.UpdateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +25,13 @@ class TalkyUsersRemoteSource @Inject constructor(private val userApi: UserContro
 
         this@TalkyUsersRemoteSource.currentUserProfile = userApi.getCurrentUser().body()
         return@withContext currentUserProfile
+    }
+
+    suspend fun getUserById(uuid: UUID): UserDto? = withContext(Dispatchers.IO) {
+
+        val response = userApi.getUserById(uuid);
+
+        return@withContext response.body()
     }
 
     suspend fun updateDisplayedName(request: UpdateUserRequestDto): UserDto? = withContext(Dispatchers.IO) {
