@@ -6,20 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.talky.mobile.api.models.FriendRequestDto
 import com.talky.mobile.api.models.UserDto
@@ -105,123 +98,10 @@ fun FriendRequestListScreen(
                 }
             }
         } else {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-
-                Box(
-                    modifier = Modifier
-                        .shadow(
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .clip(RoundedCornerShape(12.dp))
-                ) {
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Pas de nouvelles demandes d'amis")
-                        Button(
-                            onClick = { onPressBack() },
-                            modifier = Modifier.padding(top = 16.dp)
-                        ) {
-                            Icon(
-                                Icons.Filled.ArrowBack,
-                                contentDescription = "Go back",
-                                modifier = Modifier.size(ButtonDefaults.IconSize)
-                            )
-                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                            Text(text = "Retourner sur votre liste d'ami")
-                        }
-                    }
-
-                }
-
-
+            FriendRequestListEmptyMessage {
+                onPressBack()
             }
-
         }
     }
 }
 
-@Composable
-fun FriendRequestConfirmDialog(
-    isOpen: Boolean,
-    onClose: () -> Unit,
-    friendRequest: FriendRequestDto?,
-    onShowProfile: (UserDto) -> Unit,
-    onFriendRequestStatusChange: (FriendRequestDto.Status) -> Unit
-) {
-    if (isOpen && friendRequest != null)
-        AlertDialog(
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .shadow(
-                    elevation = 8.dp,
-                    shape = RoundedCornerShape(12.dp)
-                ),
-            onDismissRequest = { onClose() },
-            title = {
-                Text(
-                    text = "Confirmer la demande d'ami ?",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            },
-            text = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "${friendRequest.sender!!.displayedName} vous a envoyé une invitation.")
-                    OutlinedButton(
-                        onClick = { onShowProfile(friendRequest.sender) },
-                        modifier = Modifier.padding(top = 8.dp),
-                    ) {
-                        Text(text = "Voir le profil")
-                    }
-                }
-            },
-            buttons = {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                ) {
-                    Button(
-                        onClick = { onFriendRequestStatusChange(FriendRequestDto.Status.dENIED) },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Red,
-                            contentColor = Color.White
-                        )
-                    ) {
-                        Icon(
-                            Icons.Filled.Delete,
-                            contentDescription = "Delete",
-                            modifier = Modifier.size(ButtonDefaults.IconSize)
-                        )
-                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Refuser")
-                    }
-                    Button(onClick = { onFriendRequestStatusChange(FriendRequestDto.Status.aCCEPTED) }) {
-                        Icon(
-                            Icons.Filled.Check,
-                            contentDescription = "Accept",
-                            modifier = Modifier.size(ButtonDefaults.IconSize)
-                        )
-                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Accepter")
-                    }
-                }
-            }
-        )
-}
