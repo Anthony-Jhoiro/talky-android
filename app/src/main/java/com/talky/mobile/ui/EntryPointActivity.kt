@@ -62,68 +62,74 @@ class EntryPointActivity : ComponentActivity() {
 private fun TalkyApp() {
     val navController = rememberNavController()
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
-    Scaffold(
-        bottomBar = { NavBar(navController) },
-    ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
-                composable(route = NavigationKeys.Route.FEED) {
-                    FeedScreenDestination(navController, authenticationViewModel)
-                }
-                composable(route = NavigationKeys.Route.PROFILE) {
-                    LoginRequired(authenticationViewModel, it) {
-                        ProfileScreenDestination(navController, authenticationViewModel)
+    NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
+        composable(route = NavigationKeys.Route.FEED) {
+            NavigationBar(true, navController) {
+                FeedScreenDestination(navController, authenticationViewModel)
+            }
 
-                    }
-                }
+        }
+        composable(route = NavigationKeys.Route.PROFILE) {
+            NavigationBar(true, navController) {
+                LoginRequired(authenticationViewModel, it) {
+                    ProfileScreenDestination(navController, authenticationViewModel)
 
-                composable(route = NavigationKeys.Route.POST_CREATION) {
-                    PostCreationScreenDestination(navController)
                 }
+            }
+        }
 
-                composable(route = NavigationKeys.Route.PROFILE) {
-                    LoginRequired(authenticationViewModel, it) {
-                        ProfileScreenDestination(navController, authenticationViewModel)
-                    }
+        composable(route = NavigationKeys.Route.POST_CREATION) {
+            NavigationBar(false, navController) {
+                PostCreationScreenDestination(navController)
+            }
+        }
+
+        composable(route = NavigationKeys.Route.USER_SEARCH) {
+            NavigationBar(false, navController) {
+                LoginRequired(authenticationViewModel, it) {
+                    UserSearchScreenDestination(navController)
                 }
-                composable(route = NavigationKeys.Route.USER_SEARCH) {
-                    LoginRequired(authenticationViewModel, it) {
-                        UserSearchScreenDestination(navController)
-                    }
+            }
+        }
+        composable(route = NavigationKeys.Route.FRIENDS) {
+            NavigationBar(true, navController) {
+                LoginRequired(authenticationViewModel, it) {
+                    FriendsScreenDestination(navController)
                 }
-                composable(route = NavigationKeys.Route.FRIENDS) {
-                    LoginRequired(authenticationViewModel, it) {
-                        FriendsScreenDestination(navController)
-                    }
+            }
+        }
+        composable(route = NavigationKeys.Route.FRIEND_REQUEST_LIST) {
+            NavigationBar(false, navController) {
+                LoginRequired(authenticationViewModel, it) {
+                    FriendRequestListDestination(navController)
                 }
-                composable(route = NavigationKeys.Route.FRIEND_REQUEST_LIST) {
-                    LoginRequired(authenticationViewModel, it) {
-                        FriendRequestListDestination(navController)
-                    }
+            }
+        }
+        composable(
+            route = NavigationKeys.Route.FULL_SCREEN_IMAGE_ROUTE,
+            arguments = listOf(
+                navArgument(IMAGE_URL) {
+                    type = NavType.StringType
                 }
-                composable(
-                    route = NavigationKeys.Route.FULL_SCREEN_IMAGE_ROUTE,
-                    arguments = listOf(
-                        navArgument(IMAGE_URL) {
-                            type = NavType.StringType
-                        }
-                    )
-                ) {
-                    FullScreenImageDestination(navController)
+            )
+        ) {
+            NavigationBar(false, navController) {
+                FullScreenImageDestination(navController)
+            }
+        }
+        composable(
+            route = NavigationKeys.Route.USER_PROFILE,
+            arguments = listOf(
+                navArgument(PROFILE_ID) {
+                    type = NavType.StringType
                 }
-                composable(
-                    route = NavigationKeys.Route.USER_PROFILE,
-                    arguments = listOf(
-                        navArgument(PROFILE_ID) {
-                            type = NavType.StringType
-                        }
-                    )
-                ) {
-                    ProfileScreenDestination(
-                        navController = navController,
-                        authenticationViewModel = authenticationViewModel
-                    )
-                }
+            )
+        ) {
+            NavigationBar(true, navController) {
+                ProfileScreenDestination(
+                    navController = navController,
+                    authenticationViewModel = authenticationViewModel
+                )
             }
         }
     }
@@ -164,7 +170,11 @@ private fun PostCreationScreenDestination(navController: NavController) {
         },
         onSubmit = { textContent, privacy, images ->
             viewModel.onSubmit(textContent, privacy, images)
+        },
+        onValidateCreation = {
+            navController.navigate(NavigationKeys.Route.FEED)
         }
+
     )
 }
 
@@ -182,19 +192,19 @@ private fun ProfileScreenDestination(
     val context = LocalContext.current
     viewModel.userPosts?.let {
         ProfileScreen(
-        state = viewModel.state,
-        viewModel = viewModel,
-        logout = {
-            authenticationViewModel.doLogout(context)
-        },
-        onPressBack = {
-            navController.popBackStack()
-        },
-        userPosts = it,
-        onOpenAsset = {
-            openFullScreenImagePage(it, navController)
-        }
-    )
+            state = viewModel.state,
+            viewModel = viewModel,
+            logout = {
+                authenticationViewModel.doLogout(context)
+            },
+            onPressBack = {
+                navController.popBackStack()
+            },
+            userPosts = it,
+            onOpenAsset = {
+                openFullScreenImagePage(it, navController)
+            }
+        )
     }
 }
 
@@ -244,8 +254,8 @@ private fun FriendRequestListDestination(navController: NavController) {
         onShowProfile = {
             navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
         },
-        onFriendRequestStatusChange = {
-            fr, status -> viewModel.changeFriendRequestStatus(fr, status)
+        onFriendRequestStatusChange = { fr, status ->
+            viewModel.changeFriendRequestStatus(fr, status)
         },
         toastMessage = viewModel.toastMessage
     )
@@ -273,6 +283,32 @@ private fun LoginRequired(
             }
         }
     }
+}
+
+@Composable
+private fun NavigationBar(
+    display: Boolean,
+    navController: NavHostController,
+    content: @Composable () -> Unit
+) {
+    if(display) {
+        Scaffold(
+            bottomBar = { NavBar(navController) },
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                content()
+            }
+        }
+    } else {
+        Scaffold()
+        { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding)) {
+                content()
+            }
+        }
+    }
+
+
 }
 
 @Composable

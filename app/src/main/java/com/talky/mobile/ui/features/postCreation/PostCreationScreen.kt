@@ -50,7 +50,8 @@ val privacyOptions = listOf(
 @Composable
 fun PostCreationScreen(
     onPressBack: () -> Unit,
-    onSubmit: (String, PostDto.Privacy, List<Bitmap>) -> Unit
+    onSubmit: (String, PostDto.Privacy, List<Bitmap>) -> Unit,
+    onValidateCreation: () -> Unit
 ) {
 
     val (textContent, onTextContentChanged) = remember { mutableStateOf("") }
@@ -71,6 +72,7 @@ fun PostCreationScreen(
             images
         )
         isFetching = false
+        onValidateCreation()
     }
 
     Scaffold(
@@ -96,7 +98,8 @@ fun PostCreationScreen(
             if (!isFetching) {
                 FloatingActionButton(onClick = {
                     submitForm()
-                }) {
+                },
+                    backgroundColor = VioletFonce) {
                     Icon(Icons.Filled.Check, "Save Post")
                 }
             }
