@@ -38,7 +38,6 @@ class ProfileScreenViewModel @Inject constructor(
         val profileId = stateHandle.get<String>(NavigationKeys.Arg.PROFILE_ID)
         val profile: UserDto
         if(profileId!= null) {
-            println("On a une route")
             profile = remoteSource.getUserById(UUID.fromString(profileId))!!
         } else {
             profile = remoteSource.getProfile()!!
