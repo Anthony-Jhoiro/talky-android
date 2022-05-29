@@ -96,10 +96,12 @@ fun PostCreationScreen(
         },
         floatingActionButton = {
             if (!isFetching) {
-                FloatingActionButton(onClick = {
-                    submitForm()
-                },
-                    backgroundColor = VioletFonce) {
+                FloatingActionButton(
+                    onClick = {
+                        submitForm()
+                    },
+                    backgroundColor = VioletFonce
+                ) {
                     Icon(Icons.Filled.Check, "Save Post")
                 }
             }

@@ -14,21 +14,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FullScreenImageViewModel @Inject constructor(
-        private val stateHandle: SavedStateHandle,
+    private val stateHandle: SavedStateHandle,
 ) : ViewModel() {
 
 
     var state by mutableStateOf(
-            FullScreenAssetContract.State(
-                    null
-            )
+        FullScreenAssetContract.State(
+            null
+        )
     )
         private set
 
     init {
         viewModelScope.launch {
             val imageUrl = stateHandle.get<String>(NavigationKeys.Arg.IMAGE_URL)
-                    ?: throw IllegalStateException("No categoryId was passed to destination.")
+                ?: throw IllegalStateException("No categoryId was passed to destination.")
             state = state.copy(url = String(Base64.getDecoder().decode(imageUrl)))
         }
     }

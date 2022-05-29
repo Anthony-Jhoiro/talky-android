@@ -14,7 +14,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class UserSearchScreenViewModel @Inject constructor(private val userControllerApi: UserControllerApi) : ViewModel() {
+class UserSearchScreenViewModel @Inject constructor(private val userControllerApi: UserControllerApi) :
+    ViewModel() {
     val users: Flow<PagingData<UserDto>> = Pager(PagingConfig(pageSize = 10)) {
         TalkyUserListRemoteSource(userControllerApi)
     }.flow.cachedIn(viewModelScope)

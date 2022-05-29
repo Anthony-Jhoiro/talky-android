@@ -1,7 +1,7 @@
 package com.talky.mobile.ui.features.profile
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -11,10 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
-import androidx.compose.ui.Alignment.Companion.CenterVertically
-import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -22,10 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.solver.state.helpers.AlignHorizontallyReference
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -33,11 +27,8 @@ import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.talky.mobile.R
-import com.talky.mobile.api.models.FriendRequestDto
 import com.talky.mobile.api.models.PostDto
-import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.commons.PostFrame
-
 import com.talky.mobile.ui.theme.VioletClair
 import kotlinx.coroutines.flow.Flow
 
@@ -51,10 +42,10 @@ fun ProfileScreen(
     onOpenAsset: (String) -> Unit
 ) {
 
-    val(name, onNameChanged) = remember { mutableStateOf("") }
+    val (name, onNameChanged) = remember { mutableStateOf("") }
 
 
-    val userPosts: LazyPagingItems<PostDto> = userPosts.collectAsLazyPagingItems()
+    val lazyUserPosts: LazyPagingItems<PostDto> = userPosts.collectAsLazyPagingItems()
 
     Scaffold(
         backgroundColor = VioletClair,
@@ -86,7 +77,7 @@ fun ProfileScreen(
             item {
                 ProfilComposant(state, logout, name, onNameChanged, viewModel)
             }
-            items(userPosts) { postDto ->
+            items(lazyUserPosts) { postDto ->
                 PostFrame(post = postDto!!, openAsset = onOpenAsset)
             }
             item {
@@ -110,7 +101,7 @@ private fun ProfilComposant(
         openDialog = true
 
     }
-    if(openDialog) {
+    if (openDialog) {
         EditNameDialog(
             isOpen = openDialog,
             onClose = { openDialog = false },
@@ -153,22 +144,21 @@ private fun ProfilComposant(
                 }
             }
 
-                Card(
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .size(100.dp)
+            Card(
+                shape = CircleShape,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(100.dp)
 
-                ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
 
-                            .data(state.profile?.profilePicture)
-                            .build(),
-                        contentDescription = "",
-                        error = painterResource(id = R.drawable.ic_profile_default_picture)
-                    )
-
+                        .data(state.profile?.profilePicture)
+                        .build(),
+                    contentDescription = "",
+                    error = painterResource(id = R.drawable.ic_profile_default_picture)
+                )
 
 
             }
@@ -196,7 +186,7 @@ private fun ProfilComposant(
                 }
             }
             if (state.myProfile) {
-                Row() {
+                Row {
                     Button(
                         onClick = { logout() }, modifier = Modifier
                             .padding(6.dp)
@@ -243,12 +233,12 @@ fun EditNameDialog(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                        OutlinedTextField(
-                            modifier = Modifier.padding(start = 12.dp),
-                            value = name,
-                            onValueChange = { onNameChanged(it) },
-                            label = { Text("Entrez votre nouveau nom") }
-                        )
+                    OutlinedTextField(
+                        modifier = Modifier.padding(start = 12.dp),
+                        value = name,
+                        onValueChange = { onNameChanged(it) },
+                        label = { Text("Entrez votre nouveau nom") }
+                    )
                 }
             },
             buttons = {
@@ -273,7 +263,7 @@ fun EditNameDialog(
                         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                         Text(text = "Annuler")
                     }
-                    Button(onClick = { closeAndEdit(viewModel,name,onClose) }) {
+                    Button(onClick = { closeAndEdit(viewModel, name, onClose) }) {
                         Icon(
                             Icons.Filled.Check,
                             contentDescription = "Modify",
@@ -286,6 +276,7 @@ fun EditNameDialog(
             }
         )
 }
+
 fun closeAndEdit(
     viewModel: ProfileScreenViewModel,
     name: String,

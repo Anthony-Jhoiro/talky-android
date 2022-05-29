@@ -19,15 +19,14 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import com.talky.mobile.ui.commons.Asset
 import com.talky.mobile.ui.commons.AssetComposable
 import kotlin.math.roundToInt
 
 
 @Composable
 fun FullScreenImageScreen(
-        state: FullScreenAssetContract.State,
-        onPressBack: () -> Unit
+    state: FullScreenAssetContract.State,
+    onPressBack: () -> Unit
 ) {
     val scale = remember { mutableStateOf(1f) }
     val offsetX = remember { mutableStateOf(0f) }
@@ -35,24 +34,24 @@ fun FullScreenImageScreen(
     val size = remember { mutableStateOf(IntSize.Zero) }
 
     Scaffold(
-            topBar = {
-                TopAppBar(
-                        navigationIcon = {
-                            Icon(
-                                    imageVector = Icons.Default.ArrowBack,
-                                    modifier = Modifier
-                                        .padding(horizontal = 12.dp)
-                                        .clickable { onPressBack() },
-                                    contentDescription = "Go back"
-                            )
-                        },
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .clickable { onPressBack() },
+                        contentDescription = "Go back"
+                    )
+                },
 
-                        title = { Text("Retour") },
-                        backgroundColor = MaterialTheme.colors.background
-                )
-            }
+                title = { Text("Retour") },
+                backgroundColor = MaterialTheme.colors.background
+            )
+        }
     ) {
-        Column() {
+        Column {
             Column(
 
                 Modifier

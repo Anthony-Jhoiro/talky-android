@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
     private val usersRemoteSource: TalkyUsersRemoteSource,
-    private val stateHandle : SavedStateHandle,
+    private val stateHandle: SavedStateHandle,
     private val friendsRemoteSource: TalkyFriendsRemoteSource,
     private val postControllerApi: PostControllerApi
 ) :
@@ -42,22 +42,23 @@ class ProfileScreenViewModel @Inject constructor(
         )
     )
 
-   init {
-       viewModelScope.launch { getProfile()
-       userPosts = Pager(PagingConfig(pageSize = 5)) {
-           TalkyUserPostsRemoteSource(
-               postControllerApi,
-               state.profile?.id!!
-           )
-       }.flow.cachedIn(viewModelScope)
-       }
+    init {
+        viewModelScope.launch {
+            getProfile()
+            userPosts = Pager(PagingConfig(pageSize = 5)) {
+                TalkyUserPostsRemoteSource(
+                    postControllerApi,
+                    state.profile?.id!!
+                )
+            }.flow.cachedIn(viewModelScope)
+        }
 
-   }
+    }
 
     private suspend fun getProfile() {
         val profileId = stateHandle.get<String>(NavigationKeys.Arg.PROFILE_ID)
         val profile: UserDto
-        if(profileId!= null) {
+        if (profileId != null) {
             profile = usersRemoteSource.getUserById(UUID.fromString(profileId))!!
         } else {
             profile = usersRemoteSource.getProfile()!!
