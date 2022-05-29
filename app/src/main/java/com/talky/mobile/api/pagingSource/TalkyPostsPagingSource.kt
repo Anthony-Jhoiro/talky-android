@@ -1,4 +1,4 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.pagingSource
 
 import androidx.paging.*
 import com.talky.mobile.api.apis.PostControllerApi

@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.talky.mobile.api.TalkyPostsPagingSource
+import com.talky.mobile.api.pagingSource.TalkyPostsPagingSource
 import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.models.PostDto
 import dagger.hilt.android.lifecycle.HiltViewModel
