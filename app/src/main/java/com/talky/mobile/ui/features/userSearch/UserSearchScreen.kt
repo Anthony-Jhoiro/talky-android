@@ -1,4 +1,4 @@
-package com.talky.mobile.ui.features.friends
+package com.talky.mobile.ui.features.userSearch
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +16,6 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.talky.mobile.api.models.FriendDto
 import com.talky.mobile.api.models.FriendRequestDto
 import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.commons.UserBar
@@ -24,48 +23,33 @@ import com.talky.mobile.ui.theme.VioletClair
 import com.talky.mobile.ui.theme.VioletFonce
 import kotlinx.coroutines.flow.Flow
 
+
 @Composable
-fun FriendsScreen(
-    userList: Flow<PagingData<FriendDto>>,
-    onFriendClick: (FriendDto) -> Unit,
-    friendRequestList: List<FriendRequestDto>,
-    onSeeFriendRequests: () -> Unit,
-    onSearch: () -> Unit
+fun UserSearchScreen(
+    userList: Flow<PagingData<UserDto>>, onUserClick: (UserDto) -> Unit,
+    onPressBack: () -> Unit
 ) {
-    val userListItems: LazyPagingItems<FriendDto> = userList.collectAsLazyPagingItems()
+    val userListItems: LazyPagingItems<UserDto> = userList.collectAsLazyPagingItems()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                actions = {
+                navigationIcon = {
                     Icon(
-                        imageVector = Icons.Default.Search,
+                        imageVector = Icons.Default.ArrowBack,
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
-                            .clickable { onSearch() },
-                        contentDescription = "Search users",
+                            .clickable { onPressBack() },
+                        contentDescription = "Go back",
                         tint = Color.White
                     )
                 },
-                title = { Text("Vos amis", color = Color.White) },
+                title = { Text("Rechercher un utilisateur", color = Color.White) },
                 backgroundColor = VioletFonce
             )
         }
     ) {
         Column {
-            if (friendRequestList.isNotEmpty()) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Button(onClick = { onSeeFriendRequests() }) {
-                        Text(text = "Vous avez ${friendRequestList.size} demandes d'amis")
-                    }
-                }
-            }
-
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -74,14 +58,8 @@ fun FriendsScreen(
             ) {
 
 
-                items(userListItems) { friendDto ->
-                    val userDto = UserDto(
-                        displayedName = friendDto!!.displayedName,
-                        id = friendDto.id,
-                        lastSeen = friendDto.lastSeen,
-                        profilePicture = friendDto.profilePicture
-                    )
-                    UserBar(userDto, onClick = { onFriendClick(friendDto) })
+                items(userListItems) { userDto ->
+                    UserBar(userDto!!, onClick = { onUserClick(userDto) })
                 }
             }
         }
