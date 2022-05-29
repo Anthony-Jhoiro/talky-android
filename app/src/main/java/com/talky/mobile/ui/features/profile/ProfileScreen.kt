@@ -179,28 +179,6 @@ private fun ProfilComposant(
                     fontSize = 25.sp
                 )
             }
-           /* Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                    OutlinedTextField(
-                        modifier = Modifier.padding(start = 12.dp),
-                        value = name,
-                        onValueChange = { onNameChanged(it) },
-                        label = { Text("Entrez votre nouveau nom") }
-                    )
-                    Button(
-                        onClick = { viewModel.updateProfile(name) },
-                        modifier = Modifier
-                            .padding(start = 6.dp, end = 12.dp),
-                    ) {
-                        Icon(
-                            Icons.Filled.Edit,
-                            contentDescription = "Editer",
-                        )
-                    }
-                }
-            }*/
             Row {
                 if (!state.myProfile) {
                     Button(
