@@ -1,5 +1,6 @@
 package com.talky.mobile.ui.features.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,7 +45,10 @@ fun ProfileScreen(
     userPosts: Flow<PagingData<PostDto>>,
     onOpenAsset: (String) -> Unit
 ) {
-    val name by remember { mutableStateOf("") }
+
+    val(name, onNameChanged) = remember { mutableStateOf("") }
+
+
     val userPosts: LazyPagingItems<PostDto> = userPosts.collectAsLazyPagingItems()
 
     Scaffold(
@@ -75,7 +79,7 @@ fun ProfileScreen(
                 .background(VioletClair)
         ) {
             item {
-                ProfilComposant(state, logout, name, viewModel)
+                ProfilComposant(state, logout, name, onNameChanged, viewModel)
             }
             items(userPosts) { postDto ->
                 PostFrame(post = postDto!!, openAsset = onOpenAsset)
@@ -92,9 +96,9 @@ private fun ProfilComposant(
     state: ProfileScreenContract.State,
     logout: () -> Unit,
     name: String,
+    onNameChanged: (String) -> Unit,
     viewModel: ProfileScreenViewModel
 ) {
-    var name1 = name
     Column(
         modifier = Modifier
             .padding(20.dp)
@@ -139,13 +143,13 @@ private fun ProfilComposant(
             if (state.myProfile) {
                 OutlinedTextField(
                     modifier = Modifier.padding(6.dp),
-                    value = name1,
-                    onValueChange = { name1 = it },
+                    value = name,
+                    onValueChange = { onNameChanged(it) },
                     label = { Text("Entrez votre nouveau nom") }
                 )
 
                 Button(
-                    onClick = { viewModel.updateProfile(name1) }, modifier = Modifier
+                    onClick = { viewModel.updateProfile(name) }, modifier = Modifier
                         .fillMaxSize()
                         .padding(6.dp)
                 ) {
