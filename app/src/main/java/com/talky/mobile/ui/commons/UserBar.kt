@@ -1,5 +1,6 @@
 package com.talky.mobile.ui.commons
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,6 +33,7 @@ fun UserBar(userDto: UserDto, onClick: () -> Unit) {
                 elevation = 8.dp,
                 shape = RoundedCornerShape(15)
             )
+            .background(Color.White)
             .clickable { onClick() },
         shape = RoundedCornerShape(15)
     ) {

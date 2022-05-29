@@ -1,4 +1,4 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.services
 
 import android.graphics.Bitmap
 import android.graphics.Bitmap.CompressFormat
@@ -6,16 +6,12 @@ import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.clients.UploadApi
 import com.talky.mobile.api.models.CreatePostRequestDto
 import com.talky.mobile.api.models.PostDto
-import com.talky.mobile.ui.commons.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.http.Part
 import java.io.ByteArrayOutputStream
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 

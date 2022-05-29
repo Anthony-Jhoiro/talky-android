@@ -1,4 +1,4 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.services
 
 import com.talky.mobile.api.apis.UserControllerApi
 import com.talky.mobile.api.models.CreateUserRequestDto

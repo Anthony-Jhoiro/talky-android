@@ -3,7 +3,7 @@ package com.talky.mobile.api.clients
 import android.content.Context
 import com.talky.mobile.api.apis.*
 import com.talky.mobile.api.infrastructure.Serializer
-import com.talky.mobile.providers.AuthenticationFacade
+import com.talky.mobile.facades.AuthenticationFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

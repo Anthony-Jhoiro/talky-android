@@ -10,9 +10,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.talky.mobile.api.TalkyFriendsRemoteSource
-import com.talky.mobile.api.TalkyUserPostsRemoteSource
-import com.talky.mobile.api.TalkyUsersRemoteSource
+import com.talky.mobile.api.services.TalkyFriendsRemoteSource
+import com.talky.mobile.api.pagingSource.TalkyUserPostsRemoteSource
+import com.talky.mobile.api.services.TalkyUsersRemoteSource
 import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.models.CreateFriendRequestRequestDto
 import com.talky.mobile.api.models.PostDto

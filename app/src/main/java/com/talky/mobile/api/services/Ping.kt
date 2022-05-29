@@ -1,4 +1,4 @@
-package com.talky.mobile.providers
+package com.talky.mobile.api.services
 
 import android.content.ContentValues.TAG
 import android.content.Context

@@ -10,11 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.result.UserProfile
-import com.talky.mobile.api.TalkyUsersRemoteSource
+import com.talky.mobile.api.services.TalkyUsersRemoteSource
 import com.talky.mobile.api.models.CreateUserRequestDto
 import com.talky.mobile.api.models.UserDto
-import com.talky.mobile.providers.AuthenticationFacade
-import com.talky.mobile.providers.Ping
+import com.talky.mobile.facades.AuthenticationFacade
+import com.talky.mobile.api.services.Ping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay

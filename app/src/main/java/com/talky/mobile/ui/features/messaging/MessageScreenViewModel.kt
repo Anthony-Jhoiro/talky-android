@@ -4,8 +4,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.MessagesRemoteSource
-import com.talky.mobile.api.TalkyFriendsRemoteSource
+import com.talky.mobile.api.services.MessagesRemoteSource
+import com.talky.mobile.api.services.TalkyFriendsRemoteSource
 import com.talky.mobile.api.models.FriendshipDto
 import com.talky.mobile.api.models.MessageDto
 import com.talky.mobile.ui.NavigationKeys

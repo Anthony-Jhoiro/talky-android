@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.talky.mobile.ui.commons.AssetComposable
+import com.talky.mobile.ui.theme.VioletFonce
 import kotlin.math.roundToInt
 
 
@@ -47,7 +48,7 @@ fun FullScreenImageScreen(
                 },
 
                 title = { Text("Retour") },
-                backgroundColor = MaterialTheme.colors.background
+                backgroundColor = VioletFonce
             )
         }
     ) {

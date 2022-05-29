@@ -1,4 +1,4 @@
-package com.talky.mobile.providers
+package com.talky.mobile.facades
 
 import android.content.Context
 import com.auth0.android.Auth0

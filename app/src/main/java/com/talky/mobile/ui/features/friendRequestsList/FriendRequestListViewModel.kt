@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.TalkyFriendRequestListRemoteSource
+import com.talky.mobile.api.services.TalkyFriendRequestListRemoteSource
 import com.talky.mobile.api.models.FriendRequestDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

@@ -30,6 +30,7 @@ import com.talky.mobile.R
 import com.talky.mobile.api.models.PostDto
 import com.talky.mobile.ui.commons.PostFrame
 import com.talky.mobile.ui.theme.VioletClair
+import com.talky.mobile.ui.theme.VioletFonce
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -62,7 +63,7 @@ fun ProfileScreen(
                         )
                     },
                     title = { Text("Retour") },
-                    backgroundColor = MaterialTheme.colors.background
+                    backgroundColor = VioletFonce
                 )
             }
         }

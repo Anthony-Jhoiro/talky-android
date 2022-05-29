@@ -1,11 +1,9 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.services
 
 import com.talky.mobile.api.apis.FriendRequestControllerApi
-import com.talky.mobile.api.apis.UserControllerApi
 import com.talky.mobile.api.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 

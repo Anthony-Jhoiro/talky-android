@@ -3,7 +3,7 @@ package com.talky.mobile.ui.features.postCreation
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.TalkyAssetsRemoteSource
+import com.talky.mobile.api.services.TalkyAssetsRemoteSource
 import com.talky.mobile.api.models.CreatePostRequestDto
 import com.talky.mobile.api.models.PostDto
 import dagger.hilt.android.lifecycle.HiltViewModel
