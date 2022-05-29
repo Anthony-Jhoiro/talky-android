@@ -1,5 +1,6 @@
 package com.talky.mobile.ui.features.friendRequestsList
 
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,6 +11,8 @@ import com.talky.mobile.api.TalkyFriendRequestListRemoteSource
 import com.talky.mobile.api.models.FriendRequestDto
 import com.talky.mobile.ui.features.postCreation.rememberMutableStateListOf
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +20,8 @@ import javax.inject.Inject
 class FriendRequestListViewModel @Inject constructor(
     private val talkyFriendRequestListRemoteSource: TalkyFriendRequestListRemoteSource
 ): ViewModel() {
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     var state by mutableStateOf(FriendRequestListContract.State(listOf()))
 
@@ -25,16 +30,34 @@ class FriendRequestListViewModel @Inject constructor(
             return state.friendRequestsList
         }
 
+    private suspend fun loadFriendRequest() {
+        val friendRequestList = talkyFriendRequestListRemoteSource.getFriendRequests()
+        state = state.copy(friendRequestsList = friendRequestList)
+    }
 
     init {
         viewModelScope.launch {
-            val friendRequestList = talkyFriendRequestListRemoteSource.getFriendRequests()
-            state = state.copy(friendRequestsList = friendRequestList)
+            loadFriendRequest()
         }
     }
 
-    fun changeFriendRequestStatus(_friendRequestDto: FriendRequestDto, _status: FriendRequestDto.Status) {
 
+    fun changeFriendRequestStatus(fr: FriendRequestDto, status: FriendRequestDto.Status) {
+        viewModelScope.launch {
+            val didSucceed = talkyFriendRequestListRemoteSource.changeFriendRequestStatus(fr, status)
+            if (didSucceed) {
+                if (status == FriendRequestDto.Status.dENIED) {
+                    _toastMessage.emit("La demande d'ami a été supprimée")
+                } else {
+                    _toastMessage.emit("L'utilisateur a bien été ajouté à vos amis")
+                }
+            } else {
+                _toastMessage.emit("Une erreur est survenue")
+            }
+
+            talkyFriendRequestListRemoteSource.reset()
+            loadFriendRequest()
+        }
     }
 }
 

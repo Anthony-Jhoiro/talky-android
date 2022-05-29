@@ -213,7 +213,8 @@ private fun FriendRequestListDestination(navController: NavController) {
         },
         onFriendRequestStatusChange = {
             fr, status -> viewModel.changeFriendRequestStatus(fr, status)
-        }
+        },
+        toastMessage = viewModel.toastMessage
     )
 }
 

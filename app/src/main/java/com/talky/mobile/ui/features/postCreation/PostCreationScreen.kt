@@ -114,7 +114,7 @@ fun PostCreationScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
 
-            ) {
+                ) {
                 Box(
                     modifier = Modifier
                         .shadow(

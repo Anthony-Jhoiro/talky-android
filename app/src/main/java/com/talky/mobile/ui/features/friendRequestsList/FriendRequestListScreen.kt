@@ -1,10 +1,12 @@
 package com.talky.mobile.ui.features.friendRequestsList
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,8 +16,10 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.talky.mobile.api.models.FriendRequestDto
@@ -23,6 +27,7 @@ import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.commons.UserBar
 import com.talky.mobile.ui.theme.VioletClair
 import com.talky.mobile.ui.theme.VioletFonce
+import kotlinx.coroutines.flow.SharedFlow
 
 
 @Composable
@@ -30,11 +35,24 @@ fun FriendRequestListScreen(
     friendRequestList: List<FriendRequestDto>,
     onPressBack: () -> Unit,
     onShowProfile: (UserDto) -> Unit,
-    onFriendRequestStatusChange: (FriendRequestDto, FriendRequestDto.Status) -> Unit
+    onFriendRequestStatusChange: (FriendRequestDto, FriendRequestDto.Status) -> Unit,
+    toastMessage: SharedFlow<String>
 ) {
+    val context = LocalContext.current
 
     var openDialog by remember { mutableStateOf(true) }
     var selectedUser: FriendRequestDto? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(Unit) {
+        toastMessage
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
 
     fun onSelectUser(userDto: FriendRequestDto) {
         selectedUser = userDto
@@ -48,6 +66,7 @@ fun FriendRequestListScreen(
         friendRequest = selectedUser,
         onFriendRequestStatusChange = {
             onFriendRequestStatusChange(selectedUser!!, it)
+            openDialog = false
         },
         onShowProfile = {
             onShowProfile(it)
@@ -73,17 +92,63 @@ fun FriendRequestListScreen(
             )
         }
     ) {
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            modifier = Modifier
-                .background(VioletClair)
-        ) {
+        if (friendRequestList.isNotEmpty()) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier
+                    .background(VioletClair)
+            ) {
 
 
-            items(friendRequestList) { friendshipDto ->
-                UserBar(friendshipDto.sender!!, onClick = { onSelectUser(friendshipDto) })
+                items(friendRequestList) { friendshipDto ->
+                    UserBar(friendshipDto.sender!!, onClick = { onSelectUser(friendshipDto) })
+                }
             }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+
+                Box(
+                    modifier = Modifier
+                        .shadow(
+                            elevation = 8.dp,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clip(RoundedCornerShape(12.dp))
+                ) {
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Pas de nouvelles demandes d'amis")
+                        Button(
+                            onClick = { onPressBack() },
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription = "Go back",
+                                modifier = Modifier.size(ButtonDefaults.IconSize)
+                            )
+                            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                            Text(text = "Retourner sur votre liste d'ami")
+                        }
+                    }
+
+                }
+
+
+            }
+
         }
     }
 }
