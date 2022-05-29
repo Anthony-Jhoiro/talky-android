@@ -56,9 +56,6 @@ class TalkyAssetsRemoteSource @Inject constructor(
 
     suspend fun createPost(request: CreatePostRequestDto): PostDto? {
         val response = postApi.createPost(request)
-        if (!response.isSuccessful) {
-            println(response)
-        }
         return response.body()
 
     }

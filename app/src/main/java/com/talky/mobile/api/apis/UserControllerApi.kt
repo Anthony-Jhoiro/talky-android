@@ -9,6 +9,7 @@ import com.talky.mobile.api.models.AssetTemporaryLinkResponseDto
 import com.talky.mobile.api.models.CreateUserRequestDto
 import com.talky.mobile.api.models.UpdateUserRequestDto
 import com.talky.mobile.api.models.UserDto
+import com.talky.mobile.api.models.UserPingDto
 
 interface UserControllerApi {
     /**
@@ -78,10 +79,11 @@ interface UserControllerApi {
      * Responses:
      *  - 200: OK
      *
+     * @param userPingDto 
      * @return [Unit]
      */
     @POST("api/v1/users/ping")
-    suspend fun ping(): Response<Unit>
+    suspend fun ping(@Body userPingDto: UserPingDto): Response<Unit>
 
     /**
      * 
