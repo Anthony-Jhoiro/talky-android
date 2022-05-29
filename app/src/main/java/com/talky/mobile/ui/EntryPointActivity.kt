@@ -1,12 +1,15 @@
 package com.talky.mobile.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -258,6 +261,19 @@ private fun FriendRequestListDestination(navController: NavController) {
 @Composable
 private fun MessagesScreenDestination(navController: NavController, authenticationViewModel: AuthenticationViewModel) {
     val viewModel: MessageScreenViewModel = hiltViewModel()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.toast
+            .collect { message ->
+                Toast.makeText(
+                    context,
+                    message.messageId,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+    }
+
     MessageScreen(
         messages = viewModel.messages,
         sendMessage = {
