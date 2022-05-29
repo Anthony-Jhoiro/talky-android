@@ -3,11 +3,9 @@ package com.talky.mobile.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,11 +18,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.talky.mobile.ui.NavigationKeys.Arg.IMAGE_URL
 import com.talky.mobile.ui.NavigationKeys.Arg.PROFILE_ID
-import com.talky.mobile.ui.NavigationKeys.Route.POST_CREATION
-import com.talky.mobile.ui.NavigationKeys.Route.PROFILE
 import com.talky.mobile.ui.commons.NavBar
 import com.talky.mobile.ui.features.feed.FeedScreen
 import com.talky.mobile.ui.features.feed.FeedViewModel
+import com.talky.mobile.ui.features.friendRequestsList.FriendRequestListScreen
+import com.talky.mobile.ui.features.friendRequestsList.FriendRequestListViewModel
 import com.talky.mobile.ui.features.friends.FriendsScreen
 import com.talky.mobile.ui.features.friends.FriendsScreenViewModel
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
@@ -36,7 +34,6 @@ import com.talky.mobile.ui.features.postCreation.PostCreationViewModel
 import com.talky.mobile.ui.features.profile.ProfileScreen
 import com.talky.mobile.ui.features.profile.ProfileScreenViewModel
 import com.talky.mobile.ui.theme.ComposeSampleTheme
-import com.talky.mobile.ui.theme.VioletClair
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -63,8 +60,6 @@ private fun TalkyApp() {
     val authenticationViewModel: AuthenticationViewModel = hiltViewModel()
     Scaffold(
         bottomBar = { NavBar(navController) },
-        modifier = Modifier
-            .background(VioletClair)
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(navController, startDestination = NavigationKeys.Route.FEED) {
@@ -78,7 +73,7 @@ private fun TalkyApp() {
                     }
                 }
 
-                composable(route = POST_CREATION) {
+                composable(route = NavigationKeys.Route.POST_CREATION) {
                     PostCreationScreenDestination(navController)
                 }
 
@@ -90,6 +85,11 @@ private fun TalkyApp() {
                 composable(route = NavigationKeys.Route.FRIENDS) {
                     LoginRequired(authenticationViewModel, it) {
                         FriendsScreenDestination(navController)
+                    }
+                }
+                composable(route = NavigationKeys.Route.FRIEND_REQUEST_LIST) {
+                    LoginRequired(authenticationViewModel, it) {
+                        FriendRequestListDestination()
                     }
                 }
                 composable(
@@ -110,7 +110,10 @@ private fun TalkyApp() {
                         }
                     )
                 ) {
-                    ProfileScreenDestination(navController = navController, authenticationViewModel = authenticationViewModel)
+                    ProfileScreenDestination(
+                        navController = navController,
+                        authenticationViewModel = authenticationViewModel
+                    )
                 }
             }
         }
@@ -136,7 +139,7 @@ private fun FeedScreenDestination(
             openFullScreenImagePage(it, navController)
         },
         onAddButtonPressed = {
-            navController.navigate(POST_CREATION)
+            navController.navigate(NavigationKeys.Route.POST_CREATION)
         },
         isLoggedIn = authenticationViewModel.isLoggedIn.value
     )
@@ -161,11 +164,11 @@ private fun ProfileScreenDestination(
     navController: NavController,
     authenticationViewModel: AuthenticationViewModel,
 
-) {
+    ) {
     //ProfileScreen()
     val viewModel: ProfileScreenViewModel = hiltViewModel()
     if (viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
-        viewModel.state.myProfile = true;
+        viewModel.state.myProfile = true
     }
     ProfileScreen(
         state = viewModel.state,
@@ -178,13 +181,25 @@ private fun ProfileScreenDestination(
 
 @Composable
 private fun FriendsScreenDestination(navController: NavController) {
-    val viewModel : FriendsScreenViewModel = hiltViewModel()
+    val viewModel: FriendsScreenViewModel = hiltViewModel()
+    val friendRequestListViewModel: FriendRequestListViewModel = hiltViewModel()
+
     FriendsScreen(
         userList = viewModel.users,
         onUserClick = {
-            navController.navigate(PROFILE + "/" + it.id)
+            navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
+        },
+        friendRequestList = friendRequestListViewModel.friendRequestList,
+        onSeeFriendRequests = {
+            navController.navigate(NavigationKeys.Route.FRIEND_REQUEST_LIST)
         }
     )
+}
+
+@Composable
+private fun FriendRequestListDestination() {
+    val viewModel: FriendRequestListViewModel = hiltViewModel()
+    FriendRequestListScreen(friendRequestList = viewModel.friendRequestList)
 }
 
 // Login pages
@@ -249,6 +264,7 @@ object NavigationKeys {
         const val FULL_SCREEN_IMAGE_ROUTE = "FullScreenImage?image={$IMAGE_URL}"
         const val FULL_SCREEN_IMAGE = "FullScreenImage?image="
         const val POST_CREATION = "createPost"
+        const val FRIEND_REQUEST_LIST = "friendRequestScreen"
 
     }
 }
