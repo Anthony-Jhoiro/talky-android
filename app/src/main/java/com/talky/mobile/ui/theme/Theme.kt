@@ -15,10 +15,11 @@ private val DarkColorPalette = darkColors(
 private val LightColorPalette = lightColors(
     primary = VioletFonce,
     primaryVariant = VioletFonce,
-    secondary = VioletClair
+    secondary = VioletClair,
+    background = VioletClair,
+
 
     /* Other default colors to override
-    background = Color.White,
     surface = Color.White,
     onPrimary = Color.White,
     onSecondary = Color.Black,
