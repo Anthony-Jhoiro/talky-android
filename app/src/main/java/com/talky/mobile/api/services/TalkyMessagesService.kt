@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MessagesRemoteSource @Inject constructor(
+class TalkyMessagesService @Inject constructor(
     private val messageControllerApi: MessageControllerApi
 ) {
     suspend fun createMessage(friendshipId: UUID, content: String) = withContext(Dispatchers.IO) {

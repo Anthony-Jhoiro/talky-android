@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.services.TalkyFriendRequestListRemoteSource
+import com.talky.mobile.api.services.TalkyFriendRequestListService
 import com.talky.mobile.api.models.FriendRequestDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FriendRequestListViewModel @Inject constructor(
-    private val talkyFriendRequestListRemoteSource: TalkyFriendRequestListRemoteSource
+    private val talkyFriendRequestListService: TalkyFriendRequestListService
 ) : ViewModel() {
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
@@ -28,7 +28,7 @@ class FriendRequestListViewModel @Inject constructor(
         }
 
     private suspend fun loadFriendRequest() {
-        val friendRequestList = talkyFriendRequestListRemoteSource.getFriendRequests()
+        val friendRequestList = talkyFriendRequestListService.getFriendRequests()
         state = state.copy(friendRequestsList = friendRequestList)
     }
 
@@ -42,7 +42,7 @@ class FriendRequestListViewModel @Inject constructor(
     fun changeFriendRequestStatus(fr: FriendRequestDto, status: FriendRequestDto.Status) {
         viewModelScope.launch {
             val didSucceed =
-                talkyFriendRequestListRemoteSource.changeFriendRequestStatus(fr, status)
+                talkyFriendRequestListService.changeFriendRequestStatus(fr, status)
             if (didSucceed) {
                 if (status == FriendRequestDto.Status.dENIED) {
                     _toastMessage.emit("La demande d'ami a été supprimée")
@@ -53,7 +53,7 @@ class FriendRequestListViewModel @Inject constructor(
                 _toastMessage.emit("Une erreur est survenue")
             }
 
-            talkyFriendRequestListRemoteSource.reset()
+            talkyFriendRequestListService.reset()
             loadFriendRequest()
         }
     }

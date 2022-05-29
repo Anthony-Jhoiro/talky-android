@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Ping @Inject constructor(
+class PingService @Inject constructor(
     private val userControllerApi: UserControllerApi
     ) {
     suspend fun sendPingWithDevice() {

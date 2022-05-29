@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class TalkyAssetsRemoteSource @Inject constructor(
+class TalkyAssetsService @Inject constructor(
     private val postApi: PostControllerApi,
     private val uploadApi: UploadApi) {
 

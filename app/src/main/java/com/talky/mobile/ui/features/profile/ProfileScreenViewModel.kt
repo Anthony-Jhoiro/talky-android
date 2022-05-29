@@ -10,9 +10,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.talky.mobile.api.services.TalkyFriendsRemoteSource
+import com.talky.mobile.api.services.TalkyFriendsService
 import com.talky.mobile.api.pagingSource.TalkyUserPostsRemoteSource
-import com.talky.mobile.api.services.TalkyUsersRemoteSource
+import com.talky.mobile.api.services.TalkyUsersService
 import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.models.CreateFriendRequestRequestDto
 import com.talky.mobile.api.models.PostDto
@@ -27,9 +27,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
-    private val usersRemoteSource: TalkyUsersRemoteSource,
+    private val usersService: TalkyUsersService,
     private val stateHandle: SavedStateHandle,
-    private val friendsRemoteSource: TalkyFriendsRemoteSource,
+    private val friendsService: TalkyFriendsService,
     private val postControllerApi: PostControllerApi
 ) :
     ViewModel() {
@@ -59,9 +59,9 @@ class ProfileScreenViewModel @Inject constructor(
         val profileId = stateHandle.get<String>(NavigationKeys.Arg.PROFILE_ID)
         val profile: UserDto
         if (profileId != null) {
-            profile = usersRemoteSource.getUserById(UUID.fromString(profileId))!!
+            profile = usersService.getUserById(UUID.fromString(profileId))!!
         } else {
-            profile = usersRemoteSource.getProfile()!!
+            profile = usersService.getProfile()!!
         }
         viewModelScope.launch {
             state = state.copy(profile = profile)
@@ -75,7 +75,7 @@ class ProfileScreenViewModel @Inject constructor(
             profilePicture = null
         )
         viewModelScope.launch {
-            usersRemoteSource.updateDisplayedName(request)
+            usersService.updateDisplayedName(request)
             getProfile()
         }
     }
@@ -85,7 +85,7 @@ class ProfileScreenViewModel @Inject constructor(
             recipient = state.profile?.id
         )
         viewModelScope.launch {
-            friendsRemoteSource.createFriendRequest(request)
+            friendsService.createFriendRequest(request)
             getProfile()
         }
     }

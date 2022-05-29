@@ -12,7 +12,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class TalkyFriendsRemoteSource @Inject constructor(
+class TalkyFriendsService @Inject constructor(
     private val friendRequestApi: FriendRequestControllerApi,
     private val friendshipControllerApi: FriendshipControllerApi
 ) {

@@ -10,11 +10,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.android.result.UserProfile
-import com.talky.mobile.api.services.TalkyUsersRemoteSource
+import com.talky.mobile.api.services.TalkyUsersService
 import com.talky.mobile.api.models.CreateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.facades.AuthenticationFacade
-import com.talky.mobile.api.services.Ping
+import com.talky.mobile.api.services.PingService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
@@ -24,10 +24,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val userApi: TalkyUsersRemoteSource,
+    private val userApi: TalkyUsersService,
     private val authenticationFacade: AuthenticationFacade,
     @ApplicationContext private val context: Context,
-    private val ping: Ping
+    private val pingService: PingService
 ) : AndroidViewModel(context as Application) {
 
     var profile: MutableState<UserDto?> = mutableStateOf(null)
@@ -107,7 +107,7 @@ class AuthenticationViewModel @Inject constructor(
 
     private suspend fun pingApi() {
         if (isLoggedIn.value) {
-            ping.sendPingWithDevice()
+            pingService.sendPingWithDevice()
         }
     }
 

@@ -11,7 +11,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class TalkyFriendRequestListRemoteSource @Inject constructor(private val friendRequestControllerApi: FriendRequestControllerApi) {
+class TalkyFriendRequestListService @Inject constructor(private val friendRequestControllerApi: FriendRequestControllerApi) {
 
     private var friendRequestsList: List<FriendRequestDto>? = null
 
@@ -20,7 +20,7 @@ class TalkyFriendRequestListRemoteSource @Inject constructor(private val friendR
             return@withContext friendRequestsList!!
         }
         val friendList = friendRequestControllerApi.listFriendRequests().body()!!.toList()
-        this@TalkyFriendRequestListRemoteSource.friendRequestsList = friendList
+        this@TalkyFriendRequestListService.friendRequestsList = friendList
         return@withContext friendList
     }
 
