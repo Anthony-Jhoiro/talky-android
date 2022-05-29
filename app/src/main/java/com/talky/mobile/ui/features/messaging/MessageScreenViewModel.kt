@@ -1,10 +1,13 @@
 package com.talky.mobile.ui.features.messaging
 
+import android.widget.Toast
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.talky.mobile.api.MessagesRemoteSource
+import com.talky.mobile.api.NotificationController
 import com.talky.mobile.api.TalkyFriendsRemoteSource
 import com.talky.mobile.api.models.FriendshipDto
 import com.talky.mobile.api.models.MessageDto
@@ -19,10 +22,13 @@ import javax.inject.Inject
 class MessageScreenViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
     private val messagesRemoteSource: MessagesRemoteSource,
-    private val talkyFriendsRemoteSource: TalkyFriendsRemoteSource
+    private val talkyFriendsRemoteSource: TalkyFriendsRemoteSource,
+    private val notificationController: NotificationController
 
 ) :
     ViewModel() {
+
+    val toast = notificationController.notificationReceiver
 
     private val friendshipId = UUID.fromString(
         stateHandle.get<String>(
@@ -43,6 +49,10 @@ class MessageScreenViewModel @Inject constructor(
             val messages =
                 messagesRemoteSource.populateMessagesBefore(friendshipId, OffsetDateTime.now())
             populateMessages(messages)
+            notificationController.notificationReceiver.collect {
+                println(it.data)
+            }
+
         }
     }
 
