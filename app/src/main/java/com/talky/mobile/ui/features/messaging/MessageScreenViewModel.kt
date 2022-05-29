@@ -5,6 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.talky.mobile.api.MessagesRemoteSource
+import com.talky.mobile.api.TalkyFriendsRemoteSource
+import com.talky.mobile.api.models.FriendshipDto
 import com.talky.mobile.api.models.MessageDto
 import com.talky.mobile.ui.NavigationKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MessageScreenViewModel @Inject constructor(
     stateHandle: SavedStateHandle,
-    private val messagesRemoteSource: MessagesRemoteSource
+    private val messagesRemoteSource: MessagesRemoteSource,
+    private val talkyFriendsRemoteSource: TalkyFriendsRemoteSource
 
 ) :
     ViewModel() {
@@ -27,6 +30,8 @@ class MessageScreenViewModel @Inject constructor(
         )
     )
 
+    var friendship: FriendshipDto? = null
+
     private val _messages = mutableStateListOf<MessageDto>()
     val messages: List<MessageDto>
         get() = _messages
@@ -34,6 +39,7 @@ class MessageScreenViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            friendship = talkyFriendsRemoteSource.getFriendship(friendshipId)
             val messages =
                 messagesRemoteSource.populateMessagesBefore(friendshipId, OffsetDateTime.now())
             populateMessages(messages)
@@ -51,9 +57,14 @@ class MessageScreenViewModel @Inject constructor(
 
     fun postMessage(content: String) {
         viewModelScope.launch {
-            messagesRemoteSource.createMessage(
+            val response = messagesRemoteSource.createMessage(
                 friendshipId, content
             )
+
+            val message = response.body()
+            if (message != null) {
+                _messages.add(message)
+            }
         }
     }
 

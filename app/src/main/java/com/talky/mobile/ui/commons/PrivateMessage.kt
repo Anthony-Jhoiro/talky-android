@@ -10,12 +10,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.talky.mobile.api.models.MessageDto
 import com.talky.mobile.ui.theme.TestSecondary
 import com.talky.mobile.ui.theme.VioletFonce
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun PrivateMessageSelf(
-    //messageDto: MessageDto
+    messageDto: MessageDto
 ){
     Row() {
         Spacer(
@@ -24,7 +27,7 @@ fun PrivateMessageSelf(
         Card(
             shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomStart = 15.dp),
             modifier = Modifier
-                .padding(15.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .weight(4F),
             backgroundColor = VioletFonce,
@@ -35,7 +38,7 @@ fun PrivateMessageSelf(
                 ) {
                     Text(
                         //text = messageDto.createdAt,
-                        text = "15:09",
+                        text = messageDto.createdAt!!.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.LightGray,
                         fontSize = 15.sp,
@@ -49,7 +52,7 @@ fun PrivateMessageSelf(
                     Text(
                         color = Color.White,
                         //text = messageDto.content,
-                        text = "Arch Enemy est un groupe suédois de death metal mélodique, formé en 1995 par l'ex-guitariste de Carcass, Michael Amott. Le groupe était à l'origine représenté par Johan Liiva, la chanteuse Angela Gossow ayant pris sa place en 2001. Celle-ci est remplacée en 2014 par la Canadienne Alissa White-Gluz.")
+                        text = messageDto.content!!)
 
                 }
             }
@@ -59,7 +62,7 @@ fun PrivateMessageSelf(
 
 @Composable
 fun PrivateMessageFriend(
-    //messageDto: MessageDto
+    messageDto: MessageDto
 ){
     Row(
         horizontalArrangement = Arrangement.Start
@@ -68,7 +71,7 @@ fun PrivateMessageFriend(
         Card(
             shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp, bottomEnd = 15.dp),
             modifier = Modifier
-                .padding(15.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
                 .weight(4F),
             backgroundColor = TestSecondary,
@@ -79,7 +82,7 @@ fun PrivateMessageFriend(
                 ) {
                     Text(
                         //text = messageDto.createdAt
-                        text = "15:09",
+                        text = messageDto.createdAt!!.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
                         modifier = Modifier.fillMaxWidth(),
                         color = Color.LightGray,
                         fontSize = 15.sp,
@@ -92,7 +95,7 @@ fun PrivateMessageFriend(
                     Text(
                         color = Color.Black,
                         //text = messageDto.content
-                        text = "Arch Enemy est un groupe suédois de death metal mélodique, formé en 1995 par l'ex-guitariste de Carcass, Michael Amott. Le groupe était à l'origine représenté par Johan Liiva, la chanteuse Angela Gossow ayant pris sa place en 2001. Celle-ci est remplacée en 2014 par la Canadienne Alissa White-Gluz.")
+                        text = messageDto.content!!)
 
                 }
 

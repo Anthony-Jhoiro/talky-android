@@ -20,8 +20,6 @@ class MessagesRemoteSource @Inject constructor(
     }
 
     suspend fun populateMessagesAfter(friendshipId: UUID, date: OffsetDateTime): List<MessageDto> {
-
-//        val lastDate = if (messages.isEmpty()) OffsetDateTime.now() else messages.last().createdAt
         val response = messageControllerApi.listMessages(date = date, fetch = "AFTER", friendshipId = friendshipId)
 
         // Ignore API fails
@@ -33,8 +31,6 @@ class MessagesRemoteSource @Inject constructor(
     }
 
     suspend fun populateMessagesBefore(friendshipId: UUID, date: OffsetDateTime): List<MessageDto> {
-
-//        val lastDate = if (messages.isEmpty()) OffsetDateTime.now() else messages.last().createdAt
         val response = messageControllerApi.listMessages(date = date, fetch = "BEFORE", friendshipId = friendshipId)
 
         // Ignore API fails

@@ -16,7 +16,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.NavigationKeys.Arg.FRIENDSHIP_ID
 import com.talky.mobile.ui.NavigationKeys.Arg.IMAGE_URL
 import com.talky.mobile.ui.NavigationKeys.Arg.PROFILE_ID
@@ -41,7 +40,6 @@ import com.talky.mobile.ui.features.userSearch.UserSearchScreen
 import com.talky.mobile.ui.features.userSearch.UserSearchScreenViewModel
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
 import java.util.*
 
 
@@ -76,10 +74,8 @@ private fun TalkyApp() {
                 composable(route = NavigationKeys.Route.PROFILE) {
                     LoginRequired(authenticationViewModel, it) {
                         ProfileScreenDestination(navController, authenticationViewModel)
-
                     }
                 }
-
                 composable(route = NavigationKeys.Route.POST_CREATION) {
                     PostCreationScreenDestination(navController)
                 }
@@ -106,7 +102,7 @@ private fun TalkyApp() {
                 }
                 composable(route = NavigationKeys.Route.MESSAGES) {
                     LoginRequired(authenticationViewModel, it) {
-                        MessagesScreenDestination()
+                        MessagesScreenDestination(navController, authenticationViewModel)
                     }
                 }
                 composable(
@@ -190,19 +186,19 @@ private fun ProfileScreenDestination(
     val context = LocalContext.current
     viewModel.userPosts?.let {
         ProfileScreen(
-        state = viewModel.state,
-        viewModel = viewModel,
-        logout = {
-            authenticationViewModel.doLogout(context)
-        },
-        onPressBack = {
-            navController.popBackStack()
-        },
-        userPosts = it,
-        onOpenAsset = {
-            openFullScreenImagePage(it, navController)
-        }
-    )
+            state = viewModel.state,
+            viewModel = viewModel,
+            logout = {
+                authenticationViewModel.doLogout(context)
+            },
+            onPressBack = {
+                navController.popBackStack()
+            },
+            userPosts = it,
+            onOpenAsset = {
+                openFullScreenImagePage(it, navController)
+            }
+        )
     }
 }
 
@@ -252,20 +248,25 @@ private fun FriendRequestListDestination(navController: NavController) {
         onShowProfile = {
             navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
         },
-        onFriendRequestStatusChange = {
-            fr, status -> viewModel.changeFriendRequestStatus(fr, status)
+        onFriendRequestStatusChange = { fr, status ->
+            viewModel.changeFriendRequestStatus(fr, status)
         },
         toastMessage = viewModel.toastMessage
     )
 }
 
 @Composable
-private fun MessagesScreenDestination() {
+private fun MessagesScreenDestination(navController: NavController, authenticationViewModel: AuthenticationViewModel) {
     val viewModel: MessageScreenViewModel = hiltViewModel()
     MessageScreen(
         messages = viewModel.messages,
         sendMessage = {
             viewModel.postMessage(it)
+        },
+        friendship = viewModel.friendship,
+        currentUser = authenticationViewModel.profile.value!!,
+        onPressBack = {
+            navController.popBackStack()
         }
     )
 }
