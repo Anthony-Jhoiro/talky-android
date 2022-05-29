@@ -6,13 +6,21 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.talky.mobile.api.TalkyFriendsRemoteSource
+import com.talky.mobile.api.TalkyUserPostsRemoteSource
 import com.talky.mobile.api.TalkyUsersRemoteSource
+import com.talky.mobile.api.apis.PostControllerApi
 import com.talky.mobile.api.models.CreateFriendRequestRequestDto
+import com.talky.mobile.api.models.PostDto
 import com.talky.mobile.api.models.UpdateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.ui.NavigationKeys
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -21,9 +29,11 @@ import javax.inject.Inject
 class ProfileScreenViewModel @Inject constructor(
     private val usersRemoteSource: TalkyUsersRemoteSource,
     private val stateHandle : SavedStateHandle,
-    private val friendsRemoteSource: TalkyFriendsRemoteSource
+    private val friendsRemoteSource: TalkyFriendsRemoteSource,
+    private val postControllerApi: PostControllerApi
 ) :
     ViewModel() {
+    var userPosts: Flow<PagingData<PostDto>>? = null
 
     var state by mutableStateOf(
         ProfileScreenContract.State(
@@ -33,7 +43,15 @@ class ProfileScreenViewModel @Inject constructor(
     )
 
    init {
-       viewModelScope.launch { getProfile() }
+       viewModelScope.launch { getProfile()
+       userPosts = Pager(PagingConfig(pageSize = 5)) {
+           TalkyUserPostsRemoteSource(
+               postControllerApi,
+               state.profile?.id!!
+           )
+       }.flow.cachedIn(viewModelScope)
+       }
+
    }
 
     private suspend fun getProfile() {
@@ -46,6 +64,7 @@ class ProfileScreenViewModel @Inject constructor(
         }
         viewModelScope.launch {
             state = state.copy(profile = profile)
+
         }
     }
 
