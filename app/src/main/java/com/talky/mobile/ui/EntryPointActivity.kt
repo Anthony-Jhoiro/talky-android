@@ -167,9 +167,13 @@ private fun ProfileScreenDestination(
     if (viewModel.state.profile?.id == authenticationViewModel.profile.value?.id) {
         viewModel.state.myProfile = true;
     }
+    val context = LocalContext.current
     ProfileScreen(
         state = viewModel.state,
         viewModel = viewModel,
+        logout = {
+            authenticationViewModel.doLogout(context)
+        },
         onPressBack = {
             navController.popBackStack()
         }
