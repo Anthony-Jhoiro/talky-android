@@ -13,7 +13,7 @@ import com.auth0.android.result.UserProfile
 import com.talky.mobile.api.TalkyUsersRemoteSource
 import com.talky.mobile.api.models.CreateUserRequestDto
 import com.talky.mobile.api.models.UserDto
-import com.talky.mobile.providers.Authentication
+import com.talky.mobile.providers.AuthenticationFacade
 import com.talky.mobile.providers.Ping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
     private val userApi: TalkyUsersRemoteSource,
-    private val authentication: Authentication,
+    private val authenticationFacade: AuthenticationFacade,
     @ApplicationContext private val context: Context,
     private val ping: Ping
 ) : AndroidViewModel(context as Application) {
@@ -38,7 +38,7 @@ class AuthenticationViewModel @Inject constructor(
     private var pingRoutineIndex = mutableStateOf(0)
 
     init {
-        authentication.loadAuthentication(
+        authenticationFacade.loadAuthentication(
             context,
             successListener = {
                 reloadState {
@@ -56,7 +56,7 @@ class AuthenticationViewModel @Inject constructor(
     private fun reloadState(callback: () -> Unit = {}) {
         viewModelScope.launch {
             profile.value = userApi.getProfile()
-            isLoggedIn.value = authentication.isLoggedIn(context)
+            isLoggedIn.value = authenticationFacade.isLoggedIn(context)
             callback()
             resetPingRoutine()
         }
@@ -113,7 +113,7 @@ class AuthenticationViewModel @Inject constructor(
 
     fun doLogin(context: Context) {
         viewModelScope.launch {
-            authentication.loginUser(
+            authenticationFacade.loginUser(
                 context,
                 failureListener = {
                 },
@@ -128,7 +128,7 @@ class AuthenticationViewModel @Inject constructor(
 
     private fun loadAuthProfile() {
         viewModelScope.launch {
-            authentication.loadProfile(
+            authenticationFacade.loadProfile(
                 context,
                 successListener = { auth0Data ->
                     createProfile(auth0Data)
@@ -152,7 +152,7 @@ class AuthenticationViewModel @Inject constructor(
 
     fun doLogout(context: Context) {
         viewModelScope.launch {
-            authentication.logout(context) {
+            authenticationFacade.logout(context) {
                 userApi.reset()
                 reloadState()
             }

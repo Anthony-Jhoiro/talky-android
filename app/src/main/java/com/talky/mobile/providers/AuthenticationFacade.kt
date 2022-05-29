@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Authentication @Inject constructor() {
+class AuthenticationFacade @Inject constructor() {
 
     var accessToken: String? = null
     private var auth0: Auth0? = null

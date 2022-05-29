@@ -3,7 +3,7 @@ package com.talky.mobile.api.clients
 import android.content.Context
 import com.talky.mobile.api.apis.*
 import com.talky.mobile.api.infrastructure.Serializer
-import com.talky.mobile.providers.Authentication
+import com.talky.mobile.providers.AuthenticationFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,15 +26,15 @@ class TalkyApiProvider {
 
     @Provides
     @Singleton
-    fun provideAuthInterceptorOkHttpClient(@ApplicationContext context: Context, authentication: Authentication): OkHttpClient {
+    fun provideAuthInterceptorOkHttpClient(@ApplicationContext context: Context, authenticationFacade: AuthenticationFacade): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor(object: Interceptor {
                 override fun intercept(chain: Interceptor.Chain): Response {
-                    if (authentication.isLoggedIn(context)) {
+                    if (authenticationFacade.isLoggedIn(context)) {
 
                         val requestWithAuth: Request = chain.request().newBuilder()
-                            .addHeader("Authorization", "Bearer ${authentication.accessToken}")
+                            .addHeader("Authorization", "Bearer ${authenticationFacade.accessToken}")
                             .build()
                         return chain.proceed(requestWithAuth)
 
