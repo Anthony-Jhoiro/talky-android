@@ -24,11 +24,11 @@ class TalkyFriendRequestListService @Inject constructor(private val friendReques
         return@withContext friendList
     }
 
-    suspend fun changeFriendRequestStatus(friendRequestDto: FriendRequestDto, status: FriendRequestDto.Status): Boolean {
+    suspend fun changeFriendRequestStatus(friendRequestDto: FriendRequestDto, status: FriendRequestDto.Status): Boolean = withContext(Dispatchers.IO) {
         val request = UpdateFriendRequestRequestDto(UpdateFriendRequestRequestDto.Status.valueOf(status.name))
         val response = friendRequestControllerApi.updateFriendRequest(friendRequestDto.id!!, request)
 
-        return response.isSuccessful
+        return@withContext response.isSuccessful
     }
 
     fun reset() {

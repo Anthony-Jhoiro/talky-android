@@ -19,15 +19,15 @@ class TalkyMessagesService @Inject constructor(
         messageControllerApi.postMessage(request)
     }
 
-    suspend fun populateMessagesAfter(friendshipId: UUID, date: OffsetDateTime): List<MessageDto> {
+    suspend fun populateMessagesAfter(friendshipId: UUID, date: OffsetDateTime): List<MessageDto> = withContext(Dispatchers.IO) {
         val response = messageControllerApi.listMessages(date = date, fetch = "AFTER", friendshipId = friendshipId)
 
         // Ignore API fails
-        if (!response.isSuccessful) return listOf()
+        if (!response.isSuccessful) return@withContext listOf()
 
         val responseBody = response.body()
 
-        return  responseBody!!.content!!.sortedBy { it.createdAt }
+        return@withContext  responseBody!!.content!!.sortedBy { it.createdAt }
     }
 
     suspend fun populateMessagesBefore(friendshipId: UUID, date: OffsetDateTime): List<MessageDto> {

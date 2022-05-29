@@ -59,7 +59,7 @@ fun PostCreationForm(
                 value = textContent,
                 onValueChange = { onTextContentChanged(it) },
                 placeholder = {
-                    Text(text = "Quoi de neuf ?")
+                    Text(text = "Quoi de neuf ?", color = Color.LightGray)
                 },
                 modifier = Modifier
                     .fillMaxSize(),
@@ -83,7 +83,6 @@ fun PostCreationForm(
                 when (cameraPermissionState.status) {
                     is PermissionStatus.Denied -> {
                         cameraPermissionState.launchPermissionRequest()
-                        cameraLauncher.launch()
                     }
                     PermissionStatus.Granted -> {
                         cameraLauncher.launch()
