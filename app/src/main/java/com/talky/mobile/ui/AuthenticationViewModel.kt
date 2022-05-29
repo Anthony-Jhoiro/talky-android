@@ -11,8 +11,10 @@ import com.talky.mobile.api.TalkyUsersRemoteSource
 import com.talky.mobile.api.models.CreateUserRequestDto
 import com.talky.mobile.api.models.UserDto
 import com.talky.mobile.providers.Authentication
+import com.talky.mobile.providers.Ping
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class AuthenticationViewModel @Inject constructor(
     private val userApi: TalkyUsersRemoteSource,
     private val authentication: Authentication,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val ping: Ping
 ) : AndroidViewModel(context as Application) {
 
     var profile: MutableState<UserDto?> = mutableStateOf(null)
@@ -29,6 +32,7 @@ class AuthenticationViewModel @Inject constructor(
     var isLoggedIn = mutableStateOf(false)
 
     var isFetching = mutableStateOf(true)
+    private var pingRoutineIndex = mutableStateOf(0)
 
     init {
         authentication.loadAuthentication(
@@ -46,11 +50,35 @@ class AuthenticationViewModel @Inject constructor(
         )
     }
 
-    private fun reloadState( callback: () -> Unit = {}) {
+    private fun reloadState(callback: () -> Unit = {}) {
         viewModelScope.launch {
             profile.value = userApi.getProfile()
             isLoggedIn.value = authentication.isLoggedIn(context)
             callback()
+            resetPingRoutine()
+        }
+    }
+
+    private fun startPingRoutine() {
+        val index = pingRoutineIndex.value
+        viewModelScope.launch {
+            if (isLoggedIn.value) {
+                while (index == pingRoutineIndex.value) {
+                    pingApi()
+                    delay(5 * 60 * 1000L)
+                }
+            }
+        }
+    }
+
+    private fun resetPingRoutine() {
+        pingRoutineIndex.value += 1
+        startPingRoutine()
+    }
+
+    private suspend fun pingApi() {
+        if (isLoggedIn.value) {
+            ping.sendPingWithDevice()
         }
     }
 
