@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.talky.mobile.api.models.UserDto
+import com.talky.mobile.ui.NavigationKeys.Arg.FRIENDSHIP_ID
 import com.talky.mobile.ui.NavigationKeys.Arg.IMAGE_URL
 import com.talky.mobile.ui.NavigationKeys.Arg.PROFILE_ID
 import com.talky.mobile.ui.commons.NavBar
@@ -30,6 +30,8 @@ import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageScreen
 import com.talky.mobile.ui.features.fullScreenImage.FullScreenImageViewModel
 import com.talky.mobile.ui.features.loading.LoadingScreen
 import com.talky.mobile.ui.features.login.LoginScreen
+import com.talky.mobile.ui.features.messaging.MessageScreen
+import com.talky.mobile.ui.features.messaging.MessageScreenViewModel
 import com.talky.mobile.ui.features.postCreation.PostCreationScreen
 import com.talky.mobile.ui.features.postCreation.PostCreationViewModel
 import com.talky.mobile.ui.features.profile.ProfileScreen
@@ -38,7 +40,6 @@ import com.talky.mobile.ui.features.userSearch.UserSearchScreen
 import com.talky.mobile.ui.features.userSearch.UserSearchScreenViewModel
 import com.talky.mobile.ui.theme.ComposeSampleTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.map
 import java.util.*
 
 
@@ -73,10 +74,8 @@ private fun TalkyApp() {
                 composable(route = NavigationKeys.Route.PROFILE) {
                     LoginRequired(authenticationViewModel, it) {
                         ProfileScreenDestination(navController, authenticationViewModel)
-
                     }
                 }
-
                 composable(route = NavigationKeys.Route.POST_CREATION) {
                     PostCreationScreenDestination(navController)
                 }
@@ -99,6 +98,11 @@ private fun TalkyApp() {
                 composable(route = NavigationKeys.Route.FRIEND_REQUEST_LIST) {
                     LoginRequired(authenticationViewModel, it) {
                         FriendRequestListDestination(navController)
+                    }
+                }
+                composable(route = NavigationKeys.Route.MESSAGES) {
+                    LoginRequired(authenticationViewModel, it) {
+                        MessagesScreenDestination(navController, authenticationViewModel)
                     }
                 }
                 composable(
@@ -182,19 +186,19 @@ private fun ProfileScreenDestination(
     val context = LocalContext.current
     viewModel.userPosts?.let {
         ProfileScreen(
-        state = viewModel.state,
-        viewModel = viewModel,
-        logout = {
-            authenticationViewModel.doLogout(context)
-        },
-        onPressBack = {
-            navController.popBackStack()
-        },
-        userPosts = it,
-        onOpenAsset = {
-            openFullScreenImagePage(it, navController)
-        }
-    )
+            state = viewModel.state,
+            viewModel = viewModel,
+            logout = {
+                authenticationViewModel.doLogout(context)
+            },
+            onPressBack = {
+                navController.popBackStack()
+            },
+            userPosts = it,
+            onOpenAsset = {
+                openFullScreenImagePage(it, navController)
+            }
+        )
     }
 }
 
@@ -221,7 +225,7 @@ private fun FriendsScreenDestination(navController: NavController) {
     FriendsScreen(
         userList = viewModel.friends,
         onFriendClick = {
-            navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
+            navController.navigate(NavigationKeys.Route.MESSAGES_ROOT + "/" + it.friendshipId)
         },
         friendRequestList = friendRequestListViewModel.friendRequestList,
         onSeeFriendRequests = {
@@ -244,10 +248,26 @@ private fun FriendRequestListDestination(navController: NavController) {
         onShowProfile = {
             navController.navigate(NavigationKeys.Route.PROFILE + "/" + it.id)
         },
-        onFriendRequestStatusChange = {
-            fr, status -> viewModel.changeFriendRequestStatus(fr, status)
+        onFriendRequestStatusChange = { fr, status ->
+            viewModel.changeFriendRequestStatus(fr, status)
         },
         toastMessage = viewModel.toastMessage
+    )
+}
+
+@Composable
+private fun MessagesScreenDestination(navController: NavController, authenticationViewModel: AuthenticationViewModel) {
+    val viewModel: MessageScreenViewModel = hiltViewModel()
+    MessageScreen(
+        messages = viewModel.messages,
+        sendMessage = {
+            viewModel.postMessage(it)
+        },
+        friendship = viewModel.friendship,
+        currentUser = authenticationViewModel.profile.value!!,
+        onPressBack = {
+            navController.popBackStack()
+        }
     )
 }
 
@@ -302,6 +322,7 @@ object NavigationKeys {
     object Arg {
         const val IMAGE_URL = "imageUrl"
         const val PROFILE_ID = "id"
+        const val FRIENDSHIP_ID = "friendshipId"
     }
 
 
@@ -315,6 +336,8 @@ object NavigationKeys {
         const val POST_CREATION = "createPost"
         const val FRIEND_REQUEST_LIST = "friendRequestScreen"
         const val USER_SEARCH = "userSearch"
+        const val MESSAGES_ROOT = "messages"
+        const val MESSAGES = "messages/{$FRIENDSHIP_ID}"
 
     }
 }

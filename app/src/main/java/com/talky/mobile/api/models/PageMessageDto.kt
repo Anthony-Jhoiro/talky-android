@@ -29,14 +29,14 @@ import com.google.gson.annotations.SerializedName
 /**
  * 
  *
- * @param totalElements 
  * @param totalPages 
+ * @param totalElements 
  * @param propertySize 
  * @param content 
  * @param number 
  * @param sort 
- * @param numberOfElements 
  * @param pageable 
+ * @param numberOfElements 
  * @param first 
  * @param last 
  * @param empty 
@@ -44,11 +44,11 @@ import com.google.gson.annotations.SerializedName
 
 data class PageMessageDto (
 
-    @SerializedName("totalElements")
-    val totalElements: kotlin.Long? = null,
-
     @SerializedName("totalPages")
     val totalPages: kotlin.Int? = null,
+
+    @SerializedName("totalElements")
+    val totalElements: kotlin.Long? = null,
 
     @SerializedName("size")
     val propertySize: kotlin.Int? = null,
@@ -62,11 +62,11 @@ data class PageMessageDto (
     @SerializedName("sort")
     val sort: Sort? = null,
 
-    @SerializedName("numberOfElements")
-    val numberOfElements: kotlin.Int? = null,
-
     @SerializedName("pageable")
     val pageable: PageableObject? = null,
+
+    @SerializedName("numberOfElements")
+    val numberOfElements: kotlin.Int? = null,
 
     @SerializedName("first")
     val first: kotlin.Boolean? = null,
