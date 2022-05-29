@@ -223,7 +223,7 @@ fun EditNameDialog(
     name: String,
     onNameChanged: (String) -> Unit,
 ) {
-    if (isOpen != null)
+    if (isOpen)
         AlertDialog(
             shape = RoundedCornerShape(12.dp),
             modifier = Modifier
