@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.talky.mobile.api.models.UserDto
 
 @Composable
 fun LoginScreen(
@@ -29,15 +28,15 @@ fun LoginScreen(
                 .fillMaxSize()
                 .padding(5.dp)
         ) {
-            
+
             Text(
                 text = "Vous devez être connecté pour accéder à cette page",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center
             )
-            
+
             Spacer(modifier = Modifier.height(32.dp))
-            
+
             Button(onClick = { onLogin() }) {
                 Text(text = "Se connecter ou créer un compte")
             }

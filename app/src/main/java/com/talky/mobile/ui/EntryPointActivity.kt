@@ -107,11 +107,11 @@ private fun TalkyApp() {
         }
 
         composable(route = NavigationKeys.Route.MESSAGES) {
-          NavigationBar(false, navController) {
-            LoginRequired(authenticationViewModel, it) {
-                MessagesScreenDestination(navController, authenticationViewModel)
+            NavigationBar(false, navController) {
+                LoginRequired(authenticationViewModel, it) {
+                    MessagesScreenDestination(navController, authenticationViewModel)
+                }
             }
-          }
         }
         composable(
             route = NavigationKeys.Route.FULL_SCREEN_IMAGE_ROUTE,
@@ -124,7 +124,7 @@ private fun TalkyApp() {
             FullScreenImageDestination(navController)
 
         }
-           
+
         composable(
             route = NavigationKeys.Route.USER_PROFILE,
             arguments = listOf(
@@ -270,7 +270,10 @@ private fun FriendRequestListDestination(navController: NavController) {
 }
 
 @Composable
-private fun MessagesScreenDestination(navController: NavController, authenticationViewModel: AuthenticationViewModel) {
+private fun MessagesScreenDestination(
+    navController: NavController,
+    authenticationViewModel: AuthenticationViewModel
+) {
     val viewModel: MessageScreenViewModel = hiltViewModel()
     MessageScreen(
         messages = viewModel.messages,
@@ -315,7 +318,7 @@ private fun NavigationBar(
     navController: NavHostController,
     content: @Composable () -> Unit
 ) {
-    if(display) {
+    if (display) {
         Scaffold(
             bottomBar = { NavBar(navController) },
         ) { innerPadding ->

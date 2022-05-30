@@ -3,7 +3,7 @@ package com.talky.mobile.ui.features.postCreation
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.talky.mobile.api.TalkyAssetsRemoteSource
+import com.talky.mobile.api.services.TalkyAssetsService
 import com.talky.mobile.api.models.CreatePostRequestDto
 import com.talky.mobile.api.models.PostDto
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,11 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostCreationViewModel @Inject constructor(
-    private val talkyAssetsRemoteSource: TalkyAssetsRemoteSource
+    private val talkyAssetsService: TalkyAssetsService
 ) : ViewModel() {
 
     private suspend fun uploadAsset(asset: Bitmap): String? {
-        return talkyAssetsRemoteSource.uploadAsset(asset)
+        return talkyAssetsService.uploadAsset(asset)
     }
 
     fun onSubmit(textContent: String, privacy: PostDto.Privacy, images: List<Bitmap>) {
@@ -27,7 +27,7 @@ class PostCreationViewModel @Inject constructor(
                 CreatePostRequestDto.Privacy.valueOf(privacy.name),
                 ids
             )
-            talkyAssetsRemoteSource.createPost(request)
+            talkyAssetsService.createPost(request)
         }
     }
 }

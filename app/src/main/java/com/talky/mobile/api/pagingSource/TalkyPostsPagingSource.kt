@@ -1,4 +1,4 @@
-package com.talky.mobile.api
+package com.talky.mobile.api.pagingSource
 
 import androidx.paging.*
 import com.talky.mobile.api.apis.PostControllerApi
@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-class TalkyPostsSource(private val postApi: PostControllerApi) : PagingSource<Int, PostDto>() {
+class TalkyPostsPagingSource(private val postApi: PostControllerApi) : PagingSource<Int, PostDto>() {
     override fun getRefreshKey(state: PagingState<Int, PostDto>): Int? {
         return state.anchorPosition
     }

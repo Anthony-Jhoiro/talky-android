@@ -17,7 +17,7 @@
             android:theme="@style/Theme.Talky">
 
         <service
-            android:name=".providers.FirebaseDeviceService"
+            android:name=".facades.FirebaseDeviceServiceFacade"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>

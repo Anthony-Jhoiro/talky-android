@@ -1,4 +1,4 @@
-package com.talky.mobile.providers
+package com.talky.mobile.api.services
 
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class Ping @Inject constructor(
+class PingService @Inject constructor(
     private val userControllerApi: UserControllerApi
     ) {
     suspend fun sendPingWithDevice() {
